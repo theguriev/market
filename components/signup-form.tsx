@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-export function LoginForm({
+export function SignupForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
@@ -29,11 +29,30 @@ export function LoginForm({
               </div>
               <span className="sr-only">Acme Inc.</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to Acme Inc.</h1>
+            <h1 className="text-xl font-bold">Create your account</h1>
             <FieldDescription>
-              Don&apos;t have an account? <a href="/signup">Sign up</a>
+              Already have an account? <a href="/login">Login</a>
             </FieldDescription>
           </div>
+          <Field>
+            <FieldLabel htmlFor="firstName">First name</FieldLabel>
+            <Input id="firstName" type="text" placeholder="John" required />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="lastName">Last name</FieldLabel>
+            <Input id="lastName" type="text" placeholder="Doe" required />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="role">Role</FieldLabel>
+            <select
+              id="role"
+              required
+              className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm"
+            >
+              <option value="ugc">UGC Creator</option>
+              <option value="advertiser">Advertiser</option>
+            </select>
+          </Field>
           <Field>
             <FieldLabel htmlFor="email">Email</FieldLabel>
             <Input
@@ -44,7 +63,15 @@ export function LoginForm({
             />
           </Field>
           <Field>
-            <Button type="submit">Login</Button>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Input id="password" type="password" required />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
+            <Input id="confirmPassword" type="password" required />
+          </Field>
+          <Field>
+            <Button type="submit">Sign up</Button>
           </Field>
           <FieldSeparator>Or</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
