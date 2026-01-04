@@ -1,0 +1,55 @@
+{
+  "$schema": "https://biomejs.dev/schemas/latest/schema.json",
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "useConst": "warn"
+      },
+      "complexity": {
+        "noUselessFragments": "warn"
+      },
+      "performance": {
+        "noDelete": "warn"
+      },
+      "suspicious": {
+        "noConsole": "warn"
+      }
+    }
+  },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "app/**",
+      "components/**",
+      "hooks/**",
+      "lib/**",
+      "next.config.ts",
+      "postcss.config.mjs",
+      "tsconfig.json",
+      "package.json"
+    ]
+  },
+  "javascript": {
+    "assist": {
+      "enabled": true
+    }
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  }
+}
