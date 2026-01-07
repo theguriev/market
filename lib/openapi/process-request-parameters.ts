@@ -1,5 +1,5 @@
 import defu from "defu";
-import omit from "../omit";
+import { omit } from "es-toolkit";
 import getAccessToken from "./get-access-token";
 import objectifyOrUndefinedCookie from "./objectify-or-undefined-cookie";
 import stringifyOrUndefinedBody from "./stringifyOrUndefinedBody";

@@ -1,5 +1,3 @@
-import getCookie from "@/utils/getCookie";
-
-const getAccessToken = () => getCookie("accessToken");
+const getAccessToken = () => '';
 
 export default getAccessToken;

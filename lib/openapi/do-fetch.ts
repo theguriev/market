@@ -4,7 +4,6 @@ import { SUCCESS_CODES } from "./constants";
 import getOrRefreshAccessToken from "./get-or-refresh-access-token";
 import processRequestParameters from "./process-request-parameters";
 import replacePathParameters from "./replacePathParameters";
-import shouldRetryWithRefresh from "@/utils/handle-auth-error";
 
 const doFetch = async ({
   method,
@@ -23,7 +22,7 @@ const doFetch = async ({
   };
   baseUrl: string;
 }) => {
-  const makeRequest = async (isRetry = false) => {
+  const makeRequest = async () => {
     const { query, fetchParameters, pathParams } = processRequestParameters({
       method: String(method),
       parameters,
@@ -49,24 +48,6 @@ const doFetch = async ({
       }
       // Handle non-JSON responses
       return request.text();
-    }
-    
-    if (!isRetry && parameters.authorization && shouldRetryWithRefresh(request.status)) {      
-      try {
-        const refreshResponse = await fetch(`${import.meta.env.VITE_API_URL}/authorization/refresh`, {
-          method: 'GET',
-          credentials: 'include',
-        });
-        
-        if (refreshResponse.ok) {
-          console.log("Token refreshed successfully, retrying request...");
-          return makeRequest(true);
-        } else {
-          console.error("Failed to refresh token:", refreshResponse.status, refreshResponse.statusText);
-        }
-      } catch (refreshError) {
-        console.error("Failed to refresh token:", refreshError);
-      }
     }
     
     throw new FetchApiError(request);

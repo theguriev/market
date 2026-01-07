@@ -1,10 +1,5 @@
 import {
-  serviceBilling,
-  serviceMeals,
-  serviceMealsV1,
-  serviceMeasurements,
-  telegramAuthorization,
-  telegramMessages,
+  api
 } from "./schemas";
 
 export type ExtractResponses<T> = ExtractKey<T, "responses">;
@@ -77,12 +72,7 @@ export type GeneratorConfig = {
 export type ContentType = "" | "application/json";
 
 export type Paths = {
-  telegramAuthorization: telegramAuthorization.paths;
-  serviceMeasurements: serviceMeasurements.paths;
-  telegramMessages: telegramMessages.paths;
-  serviceMeals: serviceMeals.paths;
-  serviceMealsV1: serviceMealsV1.paths;
-  serviceBilling: serviceBilling.paths;
+  api: api.paths;
 };
 
 export type ExtractSchema<T> = T extends {
