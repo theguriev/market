@@ -1,3 +1,9 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -8,13 +14,62 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
+  FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/openapi/api-client";
+
+const signupSchema = z
+  .object({
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
+    role: z.enum(["creator", "company"]),
+    email: z.string().email("Enter a valid email"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string().min(6, "Please confirm your password"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords must match",
+    path: ["confirmPassword"],
+  });
+
+type SignupValues = z.infer<typeof signupSchema>;
 
 export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
+  const [submitting, setSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<SignupValues>({ resolver: zodResolver(signupSchema), mode: "onSubmit" });
+
+  const onSubmit = async (values: SignupValues) => {
+    try {
+      setSubmitting(true);
+      const body = {
+        name: `${values.firstName} ${values.lastName}`.trim(),
+        email: values.email,
+        password: values.password,
+        password_confirmation: values.confirmPassword,
+        role: values.role,
+      };
+      await api.api("/register", "post", { body });
+      // Optionally redirect to login or dashboard
+    } catch (err) {
+      const message =
+        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+          ? await (err as any).humanReadableJSONMessage()
+          : "Sign up failed";
+      setError("root", { message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
@@ -28,39 +83,77 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
               Already have an account? <a href="/login">Login</a>
             </FieldDescription>
           </div>
-          <Field>
+          <Field data-invalid={!!errors.firstName}>
             <FieldLabel htmlFor="firstName">First name</FieldLabel>
-            <Input id="firstName" type="text" placeholder="John" required />
+            <Input
+              id="firstName"
+              type="text"
+              placeholder="John"
+              aria-invalid={!!errors.firstName}
+              {...register("firstName")}
+            />
+            <FieldError errors={[errors.firstName]} />
           </Field>
-          <Field>
+          <Field data-invalid={!!errors.lastName}>
             <FieldLabel htmlFor="lastName">Last name</FieldLabel>
-            <Input id="lastName" type="text" placeholder="Doe" required />
+            <Input
+              id="lastName"
+              type="text"
+              placeholder="Doe"
+              aria-invalid={!!errors.lastName}
+              {...register("lastName")}
+            />
+            <FieldError errors={[errors.lastName]} />
           </Field>
-          <Field>
+          <Field data-invalid={!!errors.role}>
             <FieldLabel htmlFor="role">Role</FieldLabel>
             <select
               id="role"
-              required
+              aria-invalid={!!errors.role}
               className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm"
+              {...register("role")}
             >
-              <option value="ugc">UGC Creator</option>
-              <option value="advertiser">Advertiser</option>
+              <option value="creator">UGC Creator</option>
+              <option value="company">Advertiser</option>
             </select>
+            <FieldError errors={[errors.role]} />
           </Field>
-          <Field>
+          <Field data-invalid={!!errors.email}>
             <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input id="email" type="email" placeholder="m@example.com" required />
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              aria-invalid={!!errors.email}
+              {...register("email")}
+            />
+            <FieldError errors={[errors.email]} />
           </Field>
-          <Field>
+          <Field data-invalid={!!errors.password}>
             <FieldLabel htmlFor="password">Password</FieldLabel>
-            <Input id="password" type="password" required />
+            <Input
+              id="password"
+              type="password"
+              aria-invalid={!!errors.password}
+              {...register("password")}
+            />
+            <FieldError errors={[errors.password]} />
           </Field>
-          <Field>
+          <Field data-invalid={!!errors.confirmPassword}>
             <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
-            <Input id="confirmPassword" type="password" required />
+            <Input
+              id="confirmPassword"
+              type="password"
+              aria-invalid={!!errors.confirmPassword}
+              {...register("confirmPassword")}
+            />
+            <FieldError errors={[errors.confirmPassword]} />
           </Field>
           <Field>
-            <Button type="submit">Sign up</Button>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? "Signing up..." : "Sign up"}
+            </Button>
+            <FieldError errors={[errors.root as any]} />
           </Field>
           <FieldSeparator>Or</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">

@@ -1,3 +1,9 @@
+"use client";
+
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -8,13 +14,46 @@ import {
   FieldGroup,
   FieldLabel,
   FieldSeparator,
+  FieldError,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { api } from "@/lib/openapi/api-client";
+
+const loginSchema = z.object({
+  email: z.string().email("Enter a valid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+  const [submitting, setSubmitting] = useState(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError,
+  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), mode: "onSubmit" });
+
+  const onSubmit = async (values: LoginValues) => {
+    try {
+      setSubmitting(true);
+      await api.api("/login", "post", { body: values });
+      // Optionally refresh or redirect; leaving to caller/page
+    } catch (err) {
+      const message =
+        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+          ? await (err as any).humanReadableJSONMessage()
+          : "Login failed";
+      setError("root", { message });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
@@ -28,12 +67,32 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               Don&apos;t have an account? <a href="/signup">Sign up</a>
             </FieldDescription>
           </div>
-          <Field>
+          <Field data-invalid={!!errors.email}>
             <FieldLabel htmlFor="email">Email</FieldLabel>
-            <Input id="email" type="email" placeholder="m@example.com" required />
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              aria-invalid={!!errors.email}
+              {...register("email")}
+            />
+            <FieldError errors={[errors.email]} />
+          </Field>
+          <Field data-invalid={!!errors.password}>
+            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <Input
+              id="password"
+              type="password"
+              aria-invalid={!!errors.password}
+              {...register("password")}
+            />
+            <FieldError errors={[errors.password]} />
           </Field>
           <Field>
-            <Button type="submit">Login</Button>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? "Logging in..." : "Login"}
+            </Button>
+            <FieldError errors={[errors.root as any]} />
           </Field>
           <FieldSeparator>Or</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
