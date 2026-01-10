@@ -76,7 +76,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
               <div className="flex size-8 items-center justify-center rounded-md">
                 <GalleryVerticalEnd className="size-6" />
               </div>
-              <span className="sr-only">Acme Inc.</span>
+              <span className="sr-only">Social Market</span>
             </a>
             <h1 className="text-xl font-bold">Create your account</h1>
             <FieldDescription>
