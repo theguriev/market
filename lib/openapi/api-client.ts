@@ -15,7 +15,7 @@ export const api = {
           query?: Record<string, string>;
           path?: Record<string, string>;
         } & ExtraParams,
-        baseUrl: `${process.env.API_URL}`,
+        baseUrl: `${process.env.NEXT_PUBLIC_API_URL}`,
       })
   ),
 };
