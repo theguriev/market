@@ -24,9 +24,10 @@ const processRequestParameters = ({
     "query" in parameters
       ? (parameters.query as Record<string, string>)
       : undefined;
+  const accessToken = parameters.authorization ? getAccessToken() : "";
   const cookieWithAuthorization = parameters.authorization
     ? {
-        accessToken: getAccessToken(),
+        accessToken,
         ...(cookie as Record<string, string>),
       }
     : cookie;
@@ -38,6 +39,9 @@ const processRequestParameters = ({
       method,
       body: stringifyOrUndefinedBody(body as BodyInit),
       headers: {
+        ...(parameters.authorization && accessToken
+          ? { Authorization: `Bearer ${accessToken}` }
+          : {}),
         ...objectifyOrUndefinedCookie(
           cookieWithAuthorization as Record<string, string>
         ),

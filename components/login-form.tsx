@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,6 +29,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -38,8 +40,21 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
   const onSubmit = async (values: LoginValues) => {
     try {
       setSubmitting(true);
-      await api.api("/login", "post", { body: values });
-      // Optionally refresh or redirect; leaving to caller/page
+      const res = await api.api("/login", "post", { body: values });
+      // Persist token for authenticated requests
+      try {
+        const token = (res as any)?.data?.token;
+        if (token) {
+          // Persist in cookie so SSR can access via cookies()
+          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:"
+            ? "; Secure"
+            : "";
+          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
+        }
+      } catch {}
+      // Redirect to home
+      router.replace("/");
     } catch (err) {
       const message =
         err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
