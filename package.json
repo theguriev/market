@@ -48,7 +48,7 @@
   },
   "openapiFiles": [
     {
-      "input": "https://market-api-4escolfr.on-forge.com/docs/api.json",
+      "input": "https://market-api-m0pxxk6n.on-forge.com/docs/api.json",
       "swagger": "./lib/openapi/schemas/api.json",
       "output": "./lib/openapi/schemas/api.d.ts"
     }

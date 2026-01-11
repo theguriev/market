@@ -6,7 +6,7 @@
   },
   "servers": [
     {
-      "url": "https://market-api-4escolfr.on-forge.com/api"
+      "url": "https://market-api-m0pxxk6n.on-forge.com/api"
     }
   ],
   "security": [
@@ -15,6 +15,44 @@
     }
   ],
   "paths": {
+    "/user": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "data": {
+                      "$ref": "#/components/schemas/UserResource"
+                    },
+                    "message": {
+                      "type": "string",
+                      "enum": [
+                        "User retrieved successfully"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "data",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/AuthenticationException"
+          }
+        }
+      }
+    },
     "/register": {
       "post": {
         "operationId": "auth.register",

@@ -5,6 +5,23 @@
 
 
 export interface paths {
+  "/user": {
+    get: {
+      responses: {
+        200: {
+          content: {
+            "application/json": {
+              success: boolean;
+              data: components["schemas"]["UserResource"];
+              /** @enum {string} */
+              message: "User retrieved successfully";
+            };
+          };
+        };
+        401: components["responses"]["AuthenticationException"];
+      };
+    };
+  };
   "/register": {
     /** Register a new user with email and password */
     post: operations["auth.register"];
