@@ -8,6 +8,10 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
+import { api } from "@/lib/openapi/api-client"
+import { useQueryClient } from "@tanstack/react-query"
 
 import {
   Avatar,
@@ -40,6 +44,28 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
+  const router = useRouter()
+  const queryClient = useQueryClient()
+  const [loggingOut, setLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (loggingOut) return
+    setLoggingOut(true)
+    try {
+      await api.api("/logout", "post", { authorization: true })
+    } catch {
+      // ignore API errors; proceed to clear client state
+    } finally {
+      try {
+        document.cookie = "accessToken=; Path=/; Max-Age=0; SameSite=Lax"
+      } catch {}
+      try {
+        queryClient.clear()
+      } catch {}
+      router.replace("/login")
+      setLoggingOut(false)
+    }
+  }
 
   return (
     <SidebarMenu>
@@ -104,7 +130,14 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              Log out
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className="contents"
+              >
+                {loggingOut ? "Logging out..." : "Log out"}
+              </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
