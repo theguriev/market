@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import {
   AudioWaveform,
   BookOpen,
@@ -18,6 +19,7 @@ import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";
+import { api } from "@/lib/openapi/api-client";
 import {
   Sidebar,
   SidebarContent,
@@ -25,6 +27,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // This is sample data.
 const data = {
@@ -156,6 +159,23 @@ const data = {
   ],
 };
 
+const fetchUser = () => api.api("/user", "get", { authorization: true });
+type UserResponse = Awaited<ReturnType<typeof fetchUser>>;
+
+function SidebarUserLoader() {
+  const { data: resp } = useSuspenseQuery<UserResponse>({
+    queryKey: ["user"],
+    queryFn: fetchUser,
+  });
+  const userData = resp.data;
+  const user = {
+    name: userData.name,
+    email: userData.email,
+    avatar: userData.avatar ?? "/avatars/shadcn.jpg",
+  };
+  return <NavUser user={user} />;
+}
+
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -167,7 +187,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <React.Suspense fallback={<Skeleton className="h-10 rounded-lg" />}>
+          <SidebarUserLoader />
+        </React.Suspense>
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
