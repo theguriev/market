@@ -15,6 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { Suspense } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { PublicCampaigns } from "@/components/public-campaigns";
+import { UserCampaigns } from "@/components/user-campaigns";
+import { CampaignCreateForm } from "@/components/campaign-create-form";
 
 export default async function Home() {
   const cookieStore = await cookies();
@@ -54,7 +59,59 @@ export default async function Home() {
             <div className="bg-muted/50 aspect-video rounded-xl" />
             <div className="bg-muted/50 aspect-video rounded-xl" />
           </div>
-          <div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min" />
+          <div className="flex-1 rounded-xl md:min-h-min p-4 border bg-background">
+            <Suspense
+              fallback={
+                <div className="space-y-3">
+                  <Skeleton className="h-6 w-48" />
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                  </div>
+                </div>
+              }
+            >
+              <PublicCampaigns />
+            </Suspense>
+          </div>
+
+          <div className="flex-1 rounded-xl md:min-h-min p-4 border bg-background">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold mb-2">Create Campaign</h2>
+              <CampaignCreateForm />
+            </div>
+            <Suspense
+              fallback={
+                <div className="space-y-3">
+                  <Skeleton className="h-6 w-56" />
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                  </div>
+                </div>
+              }
+            >
+              <UserCampaigns />
+            </Suspense>
+          </div>
+          <div className="flex-1 rounded-xl md:min-h-min p-4 border bg-background">
+            <Suspense
+              fallback={
+                <div className="space-y-3">
+                  <Skeleton className="h-6 w-56" />
+                  <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                    <Skeleton className="h-24" />
+                  </div>
+                </div>
+              }
+            >
+              <UserCampaigns />
+            </Suspense>
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
