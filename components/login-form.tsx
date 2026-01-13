@@ -20,6 +20,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/openapi/api-client";
 import { getGoogleAccessToken } from "@/lib/google-oauth";
+import { getAppleIdToken } from "@/lib/apple-oauth";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -31,6 +32,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [submitting, setSubmitting] = useState(false);
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
+  const [appleSubmitting, setAppleSubmitting] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -95,6 +97,31 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     }
   };
 
+  const onAppleLogin = async () => {
+    try {
+      setAppleSubmitting(true);
+      const tokenOrCode = await getAppleIdToken();
+      const res = await api.api("/login/apple", "post", { body: { access_token: tokenOrCode } });
+      try {
+        const token = (res as any)?.data?.token;
+        if (token) {
+          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
+        }
+      } catch {}
+      router.replace("/");
+    } catch (err) {
+      const message =
+        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+          ? await (err as any).humanReadableJSONMessage()
+          : (err as Error)?.message || "Apple login failed";
+      (setError as any)("root", { message });
+    } finally {
+      setAppleSubmitting(false);
+    }
+  };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -140,7 +167,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </Field>
           <FieldSeparator>Or</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
-            <Button variant="outline" type="button">
+            <Button variant="outline" type="button" onClick={onAppleLogin} disabled={appleSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>Apple logo</title>
                 <path
@@ -148,7 +175,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   fill="currentColor"
                 />
               </svg>
-              Continue with Apple
+              {appleSubmitting ? "Connecting Apple..." : "Continue with Apple"}
             </Button>
             <Button variant="outline" type="button" onClick={onGoogleLogin} disabled={googleSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
