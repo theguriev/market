@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/lib/openapi/api-client";
+import { getGoogleAccessToken } from "@/lib/google-oauth";
 
 const loginSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -29,6 +30,7 @@ type LoginValues = z.infer<typeof loginSchema>;
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   const [submitting, setSubmitting] = useState(false);
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
   const router = useRouter();
   const {
     register,
@@ -63,6 +65,33 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       setError("root", { message });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const onGoogleLogin = async () => {
+    try {
+      setGoogleSubmitting(true);
+      const accessToken = await getGoogleAccessToken();
+      const res = await api.api("/login/google", "post", { body: { access_token: accessToken } });
+      try {
+        const token = (res as any)?.data?.token;
+        if (token) {
+          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
+          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
+        }
+      } catch {}
+      router.replace("/");
+    } catch (err) {
+      const message =
+        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+          ? await (err as any).humanReadableJSONMessage()
+          : (err as Error)?.message || "Google login failed";
+      // Surface error via root form error slot
+      // Note: reusing setError from react-hook-form for consistency
+      (setError as any)("root", { message });
+    } finally {
+      setGoogleSubmitting(false);
     }
   };
 
@@ -121,7 +150,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </svg>
               Continue with Apple
             </Button>
-            <Button variant="outline" type="button">
+            <Button variant="outline" type="button" onClick={onGoogleLogin} disabled={googleSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>Google logo</title>
                 <path
@@ -129,7 +158,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   fill="currentColor"
                 />
               </svg>
-              Continue with Google
+              {googleSubmitting ? "Connecting Google..." : "Continue with Google"}
             </Button>
           </Field>
         </FieldGroup>
