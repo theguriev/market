@@ -21,7 +21,7 @@ function loadAppleScript(): Promise<void> {
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Apple Sign-In JS"));
+    script.onerror = () => reject(new Error("Не вдалося завантажити Apple Sign-In JS"));
     document.head.appendChild(script);
   });
 
@@ -32,13 +32,13 @@ function initApple(): void {
   if (appleInitialized) return;
   const clientId = process.env.NEXT_PUBLIC_APPLE_CLIENT_ID;
   if (!clientId) {
-    throw new Error("Missing NEXT_PUBLIC_APPLE_CLIENT_ID env var");
+    throw new Error("Відсутня змінна середовища NEXT_PUBLIC_APPLE_CLIENT_ID");
   }
 
   const redirectURI = typeof window !== "undefined" ? `${window.location.origin}/login` : undefined;
   const AppleID = (window as any).AppleID;
   if (!AppleID?.auth) {
-    throw new Error("AppleID auth unavailable");
+    throw new Error("Автентифікація AppleID недоступна");
   }
   AppleID.auth.init({
     clientId,
@@ -66,11 +66,11 @@ export async function getAppleIdToken(): Promise<string> {
             // Some backends may accept authorization code; if needed, switch to code
             resolve(code);
           } else {
-            reject(new Error("No token returned by Apple"));
+            reject(new Error("Apple не повернув токен"));
           }
         })
         .catch((err: any) => {
-          reject(err instanceof Error ? err : new Error("Apple sign-in failed"));
+          reject(err instanceof Error ? err : new Error("Помилка входу через Apple"));
         });
     } catch (e) {
       reject(e as Error);

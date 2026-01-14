@@ -42,12 +42,12 @@ export default async function Home() {
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
                   <BreadcrumbLink href="#">
-                    Building Your Application
+                    Створення вашого застосунку
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>Отримання даних</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -78,7 +78,7 @@ export default async function Home() {
 
           <div className="flex-1 rounded-xl md:min-h-min p-4 border bg-background">
             <div className="mb-4">
-              <h2 className="text-xl font-semibold mb-2">Create Campaign</h2>
+              <h2 className="text-xl font-semibold mb-2">Створити кампанію</h2>
               <CampaignCreateForm />
             </div>
             <Suspense

@@ -21,15 +21,15 @@ import { api } from "@/lib/openapi/api-client";
 
 const signupSchema = z
   .object({
-    firstName: z.string().min(1, "First name is required"),
-    lastName: z.string().min(1, "Last name is required"),
+    firstName: z.string().min(1, "Ім'я є обов'язковим"),
+    lastName: z.string().min(1, "Прізвище є обов'язковим"),
     role: z.enum(["creator", "company"]),
-    email: z.string().email("Enter a valid email"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    confirmPassword: z.string().min(6, "Please confirm your password"),
+    email: z.string().email("Введіть коректну електронну адресу"),
+    password: z.string().min(6, "Пароль має містити щонайменше 6 символів"),
+    confirmPassword: z.string().min(6, "Підтвердіть ваш пароль"),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords must match",
+    message: "Паролі мають співпадати",
     path: ["confirmPassword"],
   });
 
@@ -78,59 +78,59 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
               </div>
               <span className="sr-only">Social Market</span>
             </a>
-            <h1 className="text-xl font-bold">Create your account</h1>
+            <h1 className="text-xl font-bold">Створіть обліковий запис</h1>
             <FieldDescription>
-              Already have an account? <a href="/login">Login</a>
+              Вже маєте обліковий запис? <a href="/login">Увійти</a>
             </FieldDescription>
           </div>
           <Field data-invalid={!!errors.firstName}>
-            <FieldLabel htmlFor="firstName">First name</FieldLabel>
+            <FieldLabel htmlFor="firstName">Ім'я</FieldLabel>
             <Input
               id="firstName"
               type="text"
-              placeholder="John"
+              placeholder="Іван"
               aria-invalid={!!errors.firstName}
               {...register("firstName")}
             />
             <FieldError errors={[errors.firstName]} />
           </Field>
           <Field data-invalid={!!errors.lastName}>
-            <FieldLabel htmlFor="lastName">Last name</FieldLabel>
+            <FieldLabel htmlFor="lastName">Прізвище</FieldLabel>
             <Input
               id="lastName"
               type="text"
-              placeholder="Doe"
+              placeholder="Петренко"
               aria-invalid={!!errors.lastName}
               {...register("lastName")}
             />
             <FieldError errors={[errors.lastName]} />
           </Field>
           <Field data-invalid={!!errors.role}>
-            <FieldLabel htmlFor="role">Role</FieldLabel>
+            <FieldLabel htmlFor="role">Роль</FieldLabel>
             <select
               id="role"
               aria-invalid={!!errors.role}
               className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none md:text-sm"
               {...register("role")}
             >
-              <option value="creator">UGC Creator</option>
-              <option value="company">Advertiser</option>
+              <option value="creator">UGC-креатор</option>
+              <option value="company">Рекламодавець</option>
             </select>
             <FieldError errors={[errors.role]} />
           </Field>
           <Field data-invalid={!!errors.email}>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel htmlFor="email">Ел. пошта</FieldLabel>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="m@приклад.com"
               aria-invalid={!!errors.email}
               {...register("email")}
             />
             <FieldError errors={[errors.email]} />
           </Field>
           <Field data-invalid={!!errors.password}>
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <FieldLabel htmlFor="password">Пароль</FieldLabel>
             <Input
               id="password"
               type="password"
@@ -140,7 +140,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             <FieldError errors={[errors.password]} />
           </Field>
           <Field data-invalid={!!errors.confirmPassword}>
-            <FieldLabel htmlFor="confirmPassword">Confirm password</FieldLabel>
+            <FieldLabel htmlFor="confirmPassword">Підтвердіть пароль</FieldLabel>
             <Input
               id="confirmPassword"
               type="password"
@@ -151,11 +151,11 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
           </Field>
           <Field>
             <Button type="submit" disabled={submitting}>
-              {submitting ? "Signing up..." : "Sign up"}
+              {submitting ? "Реєстрація..." : "Зареєструватися"}
             </Button>
             <FieldError errors={[errors.root as any]} />
           </Field>
-          <FieldSeparator>Or</FieldSeparator>
+          <FieldSeparator>Або</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
             <Button variant="outline" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -165,7 +165,7 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   fill="currentColor"
                 />
               </svg>
-              Continue with Apple
+              Увійти через Apple
             </Button>
             <Button variant="outline" type="button">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -175,14 +175,14 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
                   fill="currentColor"
                 />
               </svg>
-              Continue with Google
+              Увійти через Google
             </Button>
           </Field>
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#terms">Terms of Service</a> and{" "}
-        <a href="#privacy">Privacy Policy</a>.
+        Натискаючи «Продовжити», ви погоджуєтесь з нашими <a href="#terms">Умовами надання послуг</a> та{" "}
+        <a href="#privacy">Політикою конфіденційності</a>.
       </FieldDescription>
     </div>
   );

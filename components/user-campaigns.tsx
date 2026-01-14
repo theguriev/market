@@ -15,9 +15,9 @@ export function UserCampaigns() {
   return (
     <section className="space-y-4">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-xl font-semibold">Your Campaigns</h2>
+        <h2 className="text-xl font-semibold">Ваші кампанії</h2>
         <div className="text-sm text-muted-foreground">
-          {campaigns.length} total
+          {campaigns.length} всього
         </div>
       </div>
 
@@ -38,7 +38,7 @@ export function UserCampaigns() {
         </ul>
       ) : (
         <div className="rounded-lg border p-6 text-sm text-muted-foreground">
-          You have no campaigns yet.
+          У вас поки немає кампаній.
         </div>
       )}
     </section>

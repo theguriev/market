@@ -109,22 +109,22 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
-                Upgrade to Pro
+                Оновити до Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Account
+                Обліковий запис
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Billing
+                Оплата
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                Notifications
+                Сповіщення
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -136,7 +136,7 @@ export function NavUser({
                 disabled={loggingOut}
                 className="contents"
               >
-                {loggingOut ? "Logging out..." : "Log out"}
+                {loggingOut ? "Вихід..." : "Вийти"}
               </button>
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -18,20 +18,26 @@ export function PublicCampaigns() {
   return (
     <section className="space-y-4">
       <div className="flex items-baseline justify-between">
-        <h2 className="text-xl font-semibold">Public Campaigns</h2>
+        <h2 className="text-xl font-semibold">Публічні кампанії</h2>
         <div className="text-sm text-muted-foreground">
-          {typeof total === "number" ? `${total} total` : null}
-          {typeof currentPage === "number" ? ` • Page ${currentPage}` : null}
+          {typeof total === "number" ? `${total} всього` : null}
+          {typeof currentPage === "number" ? ` • Сторінка ${currentPage}` : null}
         </div>
       </div>
 
       {campaigns.length > 0 ? (
         <ul className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {campaigns.map((campaign, index) => {
-            const title = typeof campaign?.["title"] === "string" ? (campaign["title"] as string) : `Campaign #${index + 1}`;
-            const description = typeof campaign?.["description"] === "string" ? (campaign["description"] as string) : undefined;
+            const c = campaign as Record<string, unknown>;
+            const title = typeof c.title === "string" ? (c.title as string) : `Кампанія №${index + 1}`;
+            const description = typeof c.description === "string" ? (c.description as string) : undefined;
+            const key = typeof c.id === "string"
+              ? (c.id as string)
+              : typeof c.title === "string"
+              ? `title:${c.title as string}`
+              : `idx:${index}`;
             return (
-              <li key={index} className="rounded-lg border p-4 bg-background">
+              <li key={key} className="rounded-lg border p-4 bg-background">
                 <h3 className="font-medium leading-none mb-1 line-clamp-1">{title}</h3>
                 {description ? (
                   <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>
@@ -42,7 +48,7 @@ export function PublicCampaigns() {
         </ul>
       ) : (
         <div className="rounded-lg border p-6 text-sm text-muted-foreground">
-          No public campaigns to display.
+          Немає публічних кампаній для відображення.
         </div>
       )}
     </section>

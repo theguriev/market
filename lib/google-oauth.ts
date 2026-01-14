@@ -17,7 +17,7 @@ function loadGoogleScript(): Promise<void> {
     script.async = true;
     script.defer = true;
     script.onload = () => resolve();
-    script.onerror = () => reject(new Error("Failed to load Google Identity Services"));
+    script.onerror = () => reject(new Error("Не вдалося завантажити Google Identity Services"));
     document.head.appendChild(script);
   });
 
@@ -27,7 +27,7 @@ function loadGoogleScript(): Promise<void> {
 export async function getGoogleAccessToken(scopes: string[] = ["openid", "email", "profile"]): Promise<string> {
   const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   if (!clientId) {
-    throw new Error("Missing NEXT_PUBLIC_GOOGLE_CLIENT_ID env var");
+    throw new Error("Відсутня змінна середовища NEXT_PUBLIC_GOOGLE_CLIENT_ID");
   }
 
   await loadGoogleScript();
@@ -36,7 +36,7 @@ export async function getGoogleAccessToken(scopes: string[] = ["openid", "email"
     try {
       const g = (window as any).google;
       if (!g?.accounts?.oauth2?.initTokenClient) {
-        reject(new Error("Google OAuth client unavailable"));
+        reject(new Error("Клієнт Google OAuth недоступний"));
         return;
       }
 
@@ -48,7 +48,7 @@ export async function getGoogleAccessToken(scopes: string[] = ["openid", "email"
           if (token) {
             resolve(token);
           } else {
-            reject(new Error("No access token returned by Google"));
+            reject(new Error("Google не повернув токен доступу"));
           }
         },
       });

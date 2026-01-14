@@ -86,7 +86,7 @@ export function CampaignCreateForm() {
         },
       });
 
-      setSuccessMessage("Campaign created successfully");
+      setSuccessMessage("Кампанію успішно створено");
       setForm((prev) => ({
         ...prev,
         title: "",
@@ -95,7 +95,7 @@ export function CampaignCreateForm() {
       }));
       await queryClient.invalidateQueries({ queryKey: ["campaigns", "mine"] });
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Failed to create campaign");
+      setErrorMessage(error instanceof Error ? error.message : "Не вдалося створити кампанію");
     } finally {
       setSubmitting(false);
     }
@@ -107,7 +107,7 @@ export function CampaignCreateForm() {
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="campaign-title">
-              <FieldTitle>Title</FieldTitle>
+              <FieldTitle>Назва</FieldTitle>
             </FieldLabel>
             <FieldContent>
               <Input
@@ -116,14 +116,14 @@ export function CampaignCreateForm() {
                 value={form.title}
                 onChange={handleChange("title")}
                 required
-                placeholder="Your campaign title"
+                placeholder="Назва вашої кампанії"
               />
             </FieldContent>
           </Field>
 
           <Field>
             <FieldLabel htmlFor="campaign-description">
-              <FieldTitle>Description</FieldTitle>
+              <FieldTitle>Опис</FieldTitle>
             </FieldLabel>
             <FieldContent>
               <Input
@@ -132,7 +132,7 @@ export function CampaignCreateForm() {
                 value={form.description}
                 onChange={handleChange("description")}
                 required
-                placeholder="Brief description"
+                placeholder="Короткий опис"
               />
             </FieldContent>
           </Field>
@@ -140,7 +140,7 @@ export function CampaignCreateForm() {
           <div className="grid grid-cols-2 gap-3">
             <Field>
               <FieldLabel htmlFor="campaign-min-duration">
-                <FieldTitle>Min Duration (sec)</FieldTitle>
+                <FieldTitle>Мін. тривалість (сек)</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -156,7 +156,7 @@ export function CampaignCreateForm() {
 
             <Field>
               <FieldLabel htmlFor="campaign-max-duration">
-                <FieldTitle>Max Duration (sec)</FieldTitle>
+                <FieldTitle>Макс. тривалість (сек)</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -174,7 +174,7 @@ export function CampaignCreateForm() {
           <div className="grid grid-cols-2 gap-3">
             <Field>
               <FieldLabel htmlFor="campaign-age-min">
-                <FieldTitle>Age Min</FieldTitle>
+                <FieldTitle>Мін. вік</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -190,7 +190,7 @@ export function CampaignCreateForm() {
 
             <Field>
               <FieldLabel htmlFor="campaign-age-max">
-                <FieldTitle>Age Max</FieldTitle>
+                <FieldTitle>Макс. вік</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -208,7 +208,7 @@ export function CampaignCreateForm() {
           <div className="grid grid-cols-2 gap-3">
             <Field>
               <FieldLabel htmlFor="campaign-cpm">
-                <FieldTitle>CPM Rate</FieldTitle>
+                <FieldTitle>Ставка CPM</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -224,7 +224,7 @@ export function CampaignCreateForm() {
 
             <Field>
               <FieldLabel htmlFor="campaign-budget">
-                <FieldTitle>Total Budget</FieldTitle>
+                <FieldTitle>Загальний бюджет</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -242,7 +242,7 @@ export function CampaignCreateForm() {
           <div className="grid grid-cols-2 gap-3">
             <Field>
               <FieldLabel htmlFor="campaign-creators">
-                <FieldTitle>Number of Creators</FieldTitle>
+                <FieldTitle>Кількість креаторів</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -258,7 +258,7 @@ export function CampaignCreateForm() {
 
             <Field>
               <FieldLabel htmlFor="campaign-deadline">
-                <FieldTitle>Deadline</FieldTitle>
+                <FieldTitle>Кінцевий термін</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -276,7 +276,7 @@ export function CampaignCreateForm() {
           <div className="grid grid-cols-2 gap-3">
             <Field>
               <FieldLabel htmlFor="campaign-gender">
-                <FieldTitle>Gender</FieldTitle>
+                <FieldTitle>Стать</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <select
@@ -286,17 +286,17 @@ export function CampaignCreateForm() {
                   value={form.gender}
                   onChange={handleChange("gender")}
                 >
-                  <option value="all">All</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
+                  <option value="all">Усі</option>
+                  <option value="male">Чоловіки</option>
+                  <option value="female">Жінки</option>
                 </select>
-                <FieldDescription>Target audience gender preference</FieldDescription>
+                <FieldDescription>Бажана стать цільової аудиторії</FieldDescription>
               </FieldContent>
             </Field>
 
             <Field>
               <FieldLabel htmlFor="campaign-platforms">
-                <FieldTitle>Platforms</FieldTitle>
+                <FieldTitle>Платформи</FieldTitle>
               </FieldLabel>
               <FieldContent>
                 <Input
@@ -304,9 +304,9 @@ export function CampaignCreateForm() {
                   name="platformsCsv"
                   value={form.platformsCsv}
                   onChange={handleChange("platformsCsv")}
-                  placeholder="e.g. tiktok, instagram"
+                  placeholder="наприклад: tiktok, instagram"
                 />
-                <FieldDescription>Comma-separated list of platform codes</FieldDescription>
+                <FieldDescription>Список кодів платформ через кому</FieldDescription>
               </FieldContent>
             </Field>
           </div>
@@ -319,7 +319,7 @@ export function CampaignCreateForm() {
 
         <div className="flex gap-3">
           <Button type="submit" disabled={submitting}>
-            {submitting ? "Creating..." : "Create Campaign"}
+            {submitting ? "Створення..." : "Створити кампанію"}
           </Button>
         </div>
       </FieldSet>

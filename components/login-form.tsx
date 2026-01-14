@@ -23,8 +23,8 @@ import { getGoogleAccessToken } from "@/lib/google-oauth";
 import { getAppleIdToken } from "@/lib/apple-oauth";
 
 const loginSchema = z.object({
-  email: z.string().email("Enter a valid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  email: z.string().email("Введіть коректну електронну адресу"),
+  password: z.string().min(6, "Пароль має містити щонайменше 6 символів"),
 });
 
 type LoginValues = z.infer<typeof loginSchema>;
@@ -133,24 +133,24 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </div>
               <span className="sr-only">Social Market</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to Social Market</h1>
+            <h1 className="text-xl font-bold">Ласкаво просимо до Social Market</h1>
             <FieldDescription>
-              Don&apos;t have an account? <a href="/signup">Sign up</a>
+              Немає облікового запису? <a href="/signup">Зареєструйтеся</a>
             </FieldDescription>
           </div>
           <Field data-invalid={!!errors.email}>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel htmlFor="email">Ел. пошта</FieldLabel>
             <Input
               id="email"
               type="email"
-              placeholder="m@example.com"
+              placeholder="m@приклад.com"
               aria-invalid={!!errors.email}
               {...register("email")}
             />
             <FieldError errors={[errors.email]} />
           </Field>
           <Field data-invalid={!!errors.password}>
-            <FieldLabel htmlFor="password">Password</FieldLabel>
+            <FieldLabel htmlFor="password">Пароль</FieldLabel>
             <Input
               id="password"
               type="password"
@@ -161,11 +161,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </Field>
           <Field>
             <Button type="submit" disabled={submitting}>
-              {submitting ? "Logging in..." : "Login"}
+              {submitting ? "Вхід..." : "Увійти"}
             </Button>
             <FieldError errors={[errors.root as any]} />
           </Field>
-          <FieldSeparator>Or</FieldSeparator>
+          <FieldSeparator>Або</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
             <Button variant="outline" type="button" onClick={onAppleLogin} disabled={appleSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -175,7 +175,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   fill="currentColor"
                 />
               </svg>
-              {appleSubmitting ? "Connecting Apple..." : "Continue with Apple"}
+              {appleSubmitting ? "Підключення Apple..." : "Увійти через Apple"}
             </Button>
             <Button variant="outline" type="button" onClick={onGoogleLogin} disabled={googleSubmitting}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -185,14 +185,14 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   fill="currentColor"
                 />
               </svg>
-              {googleSubmitting ? "Connecting Google..." : "Continue with Google"}
+              {googleSubmitting ? "Підключення Google..." : "Увійти через Google"}
             </Button>
           </Field>
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        By clicking continue, you agree to our <a href="#terms">Terms of Service</a> and{" "}
-        <a href="#privacy">Privacy Policy</a>.
+        Натискаючи «Продовжити», ви погоджуєтесь з нашими <a href="#terms">Умовами надання послуг</a> та{" "}
+        <a href="#privacy">Політикою конфіденційності</a>.
       </FieldDescription>
     </div>
   );
