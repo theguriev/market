@@ -144,7 +144,7 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             <Input
               id="email"
               type="email"
-              placeholder="m@приклад.com"
+              placeholder="eugen@example.com"
               aria-invalid={!!errors.email}
               {...register("email")}
             />
