@@ -73,10 +73,10 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
+              <div className="flex size-12 items-center justify-center rounded-md">
+                <img src="/logo.svg" alt="логотип" className="size-10" />
               </div>
-              <span className="sr-only">Social Market</span>
+              <span className="sr-only">Creotik</span>
             </a>
             <h1 className="text-xl font-bold">Створіть обліковий запис</h1>
             <FieldDescription>

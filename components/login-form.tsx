@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GalleryVerticalEnd } from "lucide-react";
+import { Logo } from "@/components/ui/logo";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -128,12 +129,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
-              <div className="flex size-8 items-center justify-center rounded-md">
-                <GalleryVerticalEnd className="size-6" />
+              <div className="flex size-12 items-center justify-center rounded-md">
+                <Logo className="size-10" />
               </div>
-              <span className="sr-only">Social Market</span>
+              <span className="sr-only">Creotik</span>
             </a>
-            <h1 className="text-xl font-bold">Ласкаво просимо до Social Market</h1>
+            <h1 className="text-xl font-bold">Ласкаво просимо до Creotik</h1>
             <FieldDescription>
               Немає облікового запису? <a href="/signup">Зареєструйтеся</a>
             </FieldDescription>

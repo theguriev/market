@@ -14,18 +14,18 @@ import {
 export const sidebarData = {
   teams: [
     {
-      name: "Social Market",
-      logo: GalleryVerticalEnd,
+      name: "Creotik",
+      logo: "/logo.svg",
       plan: "Підприємство",
     },
     {
       name: "Acme Corp.",
-      logo: AudioWaveform,
+      logo: "/logo.svg",
       plan: "Стартап",
     },
     {
       name: "Evil Corp.",
-      logo: Command,
+      logo: "/logo.svg",
       plan: "Безкоштовно",
     },
   ],
