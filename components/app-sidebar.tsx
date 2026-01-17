@@ -1,12 +1,6 @@
 "use client";
 
-import * as React from "react";
-import { Suspense } from "react";
-import { NavMain } from "@/components/nav-main";
-import { NavProjects } from "@/components/nav-projects";
-import { TeamSwitcher } from "@/components/team-switcher";
 import { SidebarUserPanel } from "@/components/sidebar/user-panel";
-import { sidebarData } from "@/components/sidebar/data";
 import {
   Sidebar,
   SidebarContent,
@@ -16,23 +10,25 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuItem,
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Logo } from "./ui/logo";
-import Link from "next/link";
 import { PlusCircle, Wallet } from "lucide-react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { type ComponentProps, Suspense } from "react";
+import { Logo } from "./ui/logo";
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const pathname = usePathname();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild tooltip="Головна">
+        <SidebarMenuButton asChild tooltip="Toggle sidebar" isActive={pathname === "/"}>
           <Link href="/">
             <Logo className="size-5" />
-            <span className="group-data-[collapsible=icon]:hidden">
-              Creotik
-            </span>
+            <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
           </Link>
         </SidebarMenuButton>
       </SidebarHeader>
@@ -40,18 +36,30 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuButton asChild>
-                <Link href="/campaign/create">
-                  <PlusCircle className="size-4 shrink-0" />
-                  <span className="truncate">Додати кліп</span>
-                </Link>
-              </SidebarMenuButton>
-              <SidebarMenuButton asChild>
-                <Link href="/earn">
-                  <Wallet className="size-4 shrink-0" />
-                  <span className="truncate">Заробіток</span>
-                </Link>
-              </SidebarMenuButton>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/campaign/create")}
+                  tooltip="Додати кліп"
+                >
+                  <Link href="/campaign/create">
+                    <PlusCircle className="size-4 shrink-0" />
+                    <span className="truncate">Додати кліп</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname.startsWith("/earn")}
+                  tooltip="Заробіток"
+                >
+                  <Link href="/earn">
+                    <Wallet className="size-4 shrink-0" />
+                    <span className="truncate">Заробіток</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
