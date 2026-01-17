@@ -14,7 +14,7 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
-import { PlusCircle, Wallet } from "lucide-react";
+import { Home, PlusCircle, Wallet } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { type ComponentProps, Suspense } from "react";
@@ -25,7 +25,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild tooltip="Toggle sidebar" isActive={pathname === "/"}>
+        <SidebarMenuButton asChild tooltip="Toggle sidebar">
           <Link href="/">
             <Logo className="size-5" />
             <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
@@ -37,11 +37,15 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith("/campaign/create")}
-                  tooltip="Додати кліп"
-                >
+                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
+                  <Link href="/">
+                    <Home className="size-4 shrink-0" />
+                    <span className="truncate">Головна</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild tooltip="Додати кліп">
                   <Link href="/campaign/create">
                     <PlusCircle className="size-4 shrink-0" />
                     <span className="truncate">Додати кліп</span>
