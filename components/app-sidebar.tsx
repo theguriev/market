@@ -25,7 +25,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild tooltip="Toggle sidebar">
+        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
           <Link href="/">
             <Logo className="size-5" />
             <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
