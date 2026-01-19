@@ -3,9 +3,9 @@
 import { SectionCards } from "@/components/earn/section-cards";
 import { ChartAreaInteractive } from "@/components/earn/chart-area-interactive";
 import { DataTable } from "@/components/earn/data-table";
+import data from "./data.json";
 
 export default function EarnPage() {
-  const data: Array<{ date: string; clip: string; campaign: string; amount: string }> = [];
   return (
     <div className="flex flex-1 flex-col">
       <div className="@container/main flex flex-1 flex-col gap-2">
