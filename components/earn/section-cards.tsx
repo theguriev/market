@@ -27,14 +27,14 @@ export function SectionCards({ totalEarnings = 0, videoClipCount = 0 }: SectionC
       <Card className="@container/card">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardDescription>Available balance</CardDescription>
+            <CardDescription>Доступний баланс</CardDescription>
             <Tooltip>
-              <TooltipTrigger aria-label="Available balance info" className="text-muted-foreground">
+              <TooltipTrigger aria-label="Інформація про доступний баланс" className="text-muted-foreground">
                 <IconInfoCircle className="size-4" />
               </TooltipTrigger>
               <TooltipContent sideOffset={6}>
-                Funds in your Creotik wallet, ready to withdraw to your connected account. You'll
-                get an email when funds are available to cash out.
+                Кошти у вашому гаманці Creotik, готові до виведення на підключений рахунок. Ви
+                отримаєте лист, коли кошти будуть доступні для виведення.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -43,19 +43,19 @@ export function SectionCards({ totalEarnings = 0, videoClipCount = 0 }: SectionC
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">Pending transfers will appear here</div>
+          <div className="text-muted-foreground">Очікувані перекази з’являться тут</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardDescription>Average per clip</CardDescription>
+            <CardDescription>Середній дохід за кліп</CardDescription>
             <Tooltip>
-              <TooltipTrigger aria-label="Average per clip info" className="text-muted-foreground">
+              <TooltipTrigger aria-label="Інформація про середній дохід за кліп" className="text-muted-foreground">
                 <IconInfoCircle className="size-4" />
               </TooltipTrigger>
               <TooltipContent sideOffset={6}>
-                Average profit per video clip. Calculated as total earnings divided by the number of clips.
+                Середній прибуток за відеокліп. Обчислюється як загальний дохід, поділений на кількість кліпів.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -64,19 +64,19 @@ export function SectionCards({ totalEarnings = 0, videoClipCount = 0 }: SectionC
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">Based on earnings and clip count</div>
+          <div className="text-muted-foreground">На основі доходу та кількості кліпів</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardDescription>Pending balance</CardDescription>
+            <CardDescription>Баланс в очікуванні</CardDescription>
             <Tooltip>
-              <TooltipTrigger aria-label="Pending balance info" className="text-muted-foreground">
+              <TooltipTrigger aria-label="Інформація про баланс в очікуванні" className="text-muted-foreground">
                 <IconInfoCircle className="size-4" />
               </TooltipTrigger>
               <TooltipContent sideOffset={6}>
-                Your earnings move from pending to available after final view tallying and fraud checks. Please allow 10 days after the campaign ends.
+                Ваші доходи переходять з очікування у доступні після остаточного підрахунку переглядів і перевірок на шахрайство. Зачекайте до 10 днів після завершення кампанії.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -85,19 +85,19 @@ export function SectionCards({ totalEarnings = 0, videoClipCount = 0 }: SectionC
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">Will transfer after final checks</div>
+          <div className="text-muted-foreground">Перейде після остаточних перевірок</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <CardDescription>Lifetime earnings</CardDescription>
+            <CardDescription>Загальний дохід</CardDescription>
             <Tooltip>
-              <TooltipTrigger aria-label="Lifetime earnings info" className="text-muted-foreground">
+              <TooltipTrigger aria-label="Інформація про загальний дохід" className="text-muted-foreground">
                 <IconInfoCircle className="size-4" />
               </TooltipTrigger>
               <TooltipContent sideOffset={6}>
-                The total amount you've cashed out plus your current Vyro earnings.
+                Загальна сума, яку ви вже вивели, плюс ваш поточний дохід у Vyro.
               </TooltipContent>
             </Tooltip>
           </div>
@@ -106,7 +106,7 @@ export function SectionCards({ totalEarnings = 0, videoClipCount = 0 }: SectionC
           </CardTitle>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="text-muted-foreground">Cashed out + current earnings</div>
+          <div className="text-muted-foreground">Виведені кошти + поточний дохід</div>
         </CardFooter>
       </Card>
     </div>
