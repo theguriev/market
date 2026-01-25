@@ -29,6 +29,13 @@ type CampaignFormState = {
   cpmRate: string;
   totalBudget: string;
   platformsCsv: string; // comma-separated list
+  additional?: string;
+  verifiedCreatorOnly: boolean;
+  requirePortfolioReview: boolean;
+  minimum10kFollowers: boolean;
+  status?: "open" | "closed";
+  contentStylesCsv?: string;
+  videoFormatsCsv?: string;
 };
 
 export function CampaignCreateForm() {
@@ -45,6 +52,13 @@ export function CampaignCreateForm() {
     cpmRate: "0",
     totalBudget: "0",
     platformsCsv: "",
+    additional: "",
+    verifiedCreatorOnly: false,
+    requirePortfolioReview: false,
+    minimum10kFollowers: false,
+    status: "open",
+    contentStylesCsv: "",
+    videoFormatsCsv: "",
   });
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -57,6 +71,12 @@ export function CampaignCreateForm() {
     setForm((prev) => ({ ...prev, [name]: event.target.value }));
   };
 
+  const handleCheckbox = (name: keyof CampaignFormState) => (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setForm((prev) => ({ ...prev, [name]: event.target.checked }));
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
@@ -64,6 +84,16 @@ export function CampaignCreateForm() {
     setSuccessMessage(null);
     try {
       const platforms = form.platformsCsv
+        .split(",")
+        .map((segment) => segment.trim())
+        .filter(Boolean);
+
+      const content_styles = (form.contentStylesCsv || "")
+        .split(",")
+        .map((segment) => segment.trim())
+        .filter(Boolean);
+
+      const video_formats = (form.videoFormatsCsv || "")
         .split(",")
         .map((segment) => segment.trim())
         .filter(Boolean);
@@ -83,6 +113,13 @@ export function CampaignCreateForm() {
           cpm_rate: Number(form.cpmRate),
           total_budget: Number(form.totalBudget),
           platforms,
+          additional: form.additional || null,
+          verified_creator_only: form.verifiedCreatorOnly || false,
+          require_portfolio_review: form.requirePortfolioReview || false,
+          minimum_10k_followers: form.minimum10kFollowers || false,
+          status: form.status,
+          content_styles: content_styles.length ? content_styles : null,
+          video_formats: video_formats.length ? video_formats : null,
         },
       });
 
@@ -92,6 +129,9 @@ export function CampaignCreateForm() {
         title: "",
         description: "",
         platformsCsv: "",
+        additional: "",
+        contentStylesCsv: "",
+        videoFormatsCsv: "",
       }));
       await queryClient.invalidateQueries({ queryKey: ["campaigns", "mine"] });
     } catch (error) {
@@ -134,6 +174,22 @@ export function CampaignCreateForm() {
                 required
                 placeholder="Короткий опис"
               />
+            </FieldContent>
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="campaign-additional">
+              <FieldTitle>Додаткова інформація</FieldTitle>
+            </FieldLabel>
+            <FieldContent>
+              <Input
+                id="campaign-additional"
+                name="additional"
+                value={form.additional}
+                onChange={handleChange("additional")}
+                placeholder="Необов’язково: деталі або вимоги"
+              />
+              <FieldDescription>Необов’язкове поле</FieldDescription>
             </FieldContent>
           </Field>
 
@@ -253,6 +309,38 @@ export function CampaignCreateForm() {
                   onChange={handleChange("numberOfCreators")}
                   required
                 />
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="campaign-content-styles">
+                <FieldTitle>Стилі контенту</FieldTitle>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="campaign-content-styles"
+                  name="contentStylesCsv"
+                  value={form.contentStylesCsv || ""}
+                  onChange={handleChange("contentStylesCsv")}
+                  placeholder="наприклад: tutorial, review"
+                />
+                <FieldDescription>Необов’язково: коди стилів через кому</FieldDescription>
+              </FieldContent>
+            </Field>
+
+            <Field>
+              <FieldLabel htmlFor="campaign-video-formats">
+                <FieldTitle>Формати відео</FieldTitle>
+              </FieldLabel>
+              <FieldContent>
+                <Input
+                  id="campaign-video-formats"
+                  name="videoFormatsCsv"
+                  value={form.videoFormatsCsv || ""}
+                  onChange={handleChange("videoFormatsCsv")}
+                  placeholder="наприклад: mp4, mov"
+                />
+                <FieldDescription>Необов’язково: коди форматів через кому</FieldDescription>
               </FieldContent>
             </Field>
 
