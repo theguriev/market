@@ -23,11 +23,15 @@ import { Logo } from "./ui/logo";
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar
+      collapsible="icon"
+      className="**:data-[sidebar=sidebar]:bg-transparent!"
+      {...props}
+    >
       <SidebarHeader className="flex flex-row">
         <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
           <Link href="/">
-            <Logo className="size-5" />
+            <Logo />
             <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
           </Link>
         </SidebarMenuButton>
@@ -39,7 +43,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
                   <Link href="/">
-                    <Home className="size-4 shrink-0" />
+                    <Home className="shrink-0" />
                     <span className="truncate">Головна</span>
                   </Link>
                 </SidebarMenuButton>
@@ -51,7 +55,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   tooltip="Додати кліп"
                 >
                   <Link href="/campaign/create">
-                    <PlusCircle className="size-4 shrink-0" />
+                    <PlusCircle className="shrink-0" />
                     <span className="truncate">Додати кліп</span>
                   </Link>
                 </SidebarMenuButton>
@@ -63,7 +67,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   tooltip="Заробіток"
                 >
                   <Link href="/earn">
-                    <Wallet className="size-4 shrink-0" />
+                    <Wallet className="shrink-0" />
                     <span className="truncate">Заробіток</span>
                   </Link>
                 </SidebarMenuButton>
