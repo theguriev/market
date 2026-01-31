@@ -1,6 +1,7 @@
 "use client";
 
-import { SidebarUserPanel } from "@/components/sidebar/user-panel";
+import { SidebarProfile } from "@/components/sidebar/nav-profile";
+import { NavMore } from "@/components/sidebar/nav-more";
 import {
   Sidebar,
   SidebarContent,
@@ -25,24 +26,31 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="icon"
-      className="**:data-[sidebar=sidebar]:bg-transparent!"
+      className="border-none"
       {...props}
     >
-      <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
-          <Link href="/">
+      <SidebarHeader className="flex flex-row p-2">
+        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current h-auto p-0">
+          <Link href="/" className="flex items-center gap-2 px-2 py-1.5 ">
             <Logo />
-            <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
+            <span className="text-xl font-bold tracking-tight group-data-[collapsible=icon]:hidden">
+              Creotik
+            </span>
           </Link>
         </SidebarMenuButton>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="px-2">
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-2">
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
-                  <Link href="/">
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === "/"}
+                  tooltip="Головна"
+                  className="h-12 [&>svg]:size-6"
+                >
+                  <Link href="/" className="flex items-center gap-4 text-base font-medium">
                     <Home className="shrink-0" />
                     <span className="truncate">Головна</span>
                   </Link>
@@ -53,8 +61,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   asChild
                   isActive={pathname.startsWith("/campaign/create")}
                   tooltip="Додати кліп"
+                  className="h-12 [&>svg]:size-6"
                 >
-                  <Link href="/campaign/create">
+                  <Link href="/campaign/create" className="flex items-center gap-4 text-base font-medium">
                     <PlusCircle className="shrink-0" />
                     <span className="truncate">Додати кліп</span>
                   </Link>
@@ -65,23 +74,23 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   asChild
                   isActive={pathname.startsWith("/earn")}
                   tooltip="Заробіток"
+                  className="h-12 [&>svg]:size-6"
                 >
-                  <Link href="/earn">
+                  <Link href="/earn" className="flex items-center gap-4 text-base font-medium">
                     <Wallet className="shrink-0" />
                     <span className="truncate">Заробіток</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
+              
+              <SidebarProfile />
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <Suspense fallback={<Skeleton className="h-10 rounded-lg" />}>
-          <SidebarUserPanel />
-        </Suspense>
+      <SidebarFooter className="p-2">
+        <NavMore />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
