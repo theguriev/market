@@ -31,11 +31,8 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
     >
       <SidebarHeader className="flex flex-row p-2">
         <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current h-auto p-0">
-          <Link href="/" className="flex items-center gap-2 px-2 py-1.5 ">
+          <Link href="/" className="flex items-center gap-2 px-4 py-1.5">
             <Logo />
-            <span className="text-xl font-bold tracking-tight">
-              Creotik
-            </span>
           </Link>
         </SidebarMenuButton>
       </SidebarHeader>
