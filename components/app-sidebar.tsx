@@ -45,11 +45,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                 </SidebarMenuButton>
               </SidebarMenuItem>
               <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith("/campaign/create")}
-                  tooltip="Додати кліп"
-                >
+                <SidebarMenuButton asChild tooltip="Додати кліп">
                   <Link href="/campaign/create">
                     <PlusCircle className="size-4 shrink-0" />
                     <span className="truncate">Додати кліп</span>
