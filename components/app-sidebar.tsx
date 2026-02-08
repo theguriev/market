@@ -1,6 +1,9 @@
 "use client";
 
-import { SidebarUserPanel } from "@/components/sidebar/user-panel";
+import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
+import * as React from "react";
+
+import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -11,69 +14,98 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Home, PlusCircle, Wallet } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type ComponentProps, Suspense } from "react";
-import { Logo } from "./ui/logo";
 
-export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
+// This is sample data
+const data = {
+  user: {
+    name: "shadcn",
+    email: "m@example.com",
+    avatar: "/avatars/shadcn.jpg",
+  },
+  navMain: [
+    {
+      title: "Inbox",
+      url: "#",
+      icon: Inbox,
+      isActive: true,
+    },
+    {
+      title: "Drafts",
+      url: "#",
+      icon: File,
+      isActive: false,
+    },
+    {
+      title: "Sent",
+      url: "#",
+      icon: Send,
+      isActive: false,
+    },
+    {
+      title: "Junk",
+      url: "#",
+      icon: ArchiveX,
+      isActive: false,
+    },
+    {
+      title: "Trash",
+      url: "#",
+      icon: Trash2,
+      isActive: false,
+    },
+  ],
+};
+
+export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
-          <Link href="/">
-            <Logo className="size-5" />
-            <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
-          </Link>
-        </SidebarMenuButton>
+    <Sidebar
+      collapsible="none"
+      className="h-full min-h-svh w-[calc(var(--sidebar-width-icon)+1px)]! border-r overflow-hidden"
+      {...props}
+    >
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+              <a href="#">
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Acme Inc</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="px-1.5 md:px-0">
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
-                  <Link href="/">
-                    <Home className="size-4 shrink-0" />
-                    <span className="truncate">Головна</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Додати кліп">
-                  <Link href="/campaign/create">
-                    <PlusCircle className="size-4 shrink-0" />
-                    <span className="truncate">Додати кліп</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith("/earn")}
-                  tooltip="Заробіток"
-                >
-                  <Link href="/earn">
-                    <Wallet className="size-4 shrink-0" />
-                    <span className="truncate">Заробіток</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {data.navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    tooltip={{
+                      children: item.title,
+                      hidden: false,
+                    }}
+                    className="px-2.5 md:px-2"
+                  >
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Suspense fallback={<Skeleton className="h-10 rounded-lg" />}>
-          <SidebarUserPanel />
-        </Suspense>
+        <NavUser user={data.user} />
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }

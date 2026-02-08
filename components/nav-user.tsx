@@ -8,10 +8,6 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { api } from "@/lib/openapi/api-client"
-import { useQueryClient } from "@tanstack/react-query"
 
 import {
   Avatar,
@@ -44,28 +40,6 @@ export function NavUser({
   }
 }) {
   const { isMobile } = useSidebar()
-  const router = useRouter()
-  const queryClient = useQueryClient()
-  const [loggingOut, setLoggingOut] = useState(false)
-
-  const handleLogout = async () => {
-    if (loggingOut) return
-    setLoggingOut(true)
-    try {
-      await api.api("/logout", "post", { authorization: true })
-    } catch {
-      // ignore API errors; proceed to clear client state
-    } finally {
-      try {
-        document.cookie = "accessToken=; Path=/; Max-Age=0; SameSite=Lax"
-      } catch {}
-      try {
-        queryClient.clear()
-      } catch {}
-      router.replace("/login")
-      setLoggingOut(false)
-    }
-  }
 
   return (
     <SidebarMenu>
@@ -74,7 +48,7 @@ export function NavUser({
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground md:h-8 md:p-0"
             >
               <Avatar className="h-8 w-8 rounded-lg">
                 <AvatarImage src={user.avatar} alt={user.name} />
@@ -109,35 +83,28 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
-                Оновити до Pro
+                Upgrade to Pro
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <BadgeCheck />
-                Обліковий запис
+                Account
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
-                Оплата
+                Billing
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Bell />
-                Сповіщення
+                Notifications
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="contents"
-              >
-                {loggingOut ? "Вихід..." : "Вийти"}
-              </button>
+              Log out
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
