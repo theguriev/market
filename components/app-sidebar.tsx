@@ -1,7 +1,9 @@
 "use client";
 
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
+import { Home, PlusCircle, Wallet } from "lucide-react";
 import * as React from "react";
+import { Logo } from "./ui/logo";
+import Link from "next/link";
 
 import { NavUser } from "@/components/nav-user";
 import {
@@ -25,33 +27,21 @@ const data = {
   },
   navMain: [
     {
-      title: "Inbox",
-      url: "#",
-      icon: Inbox,
+      title: "Головна",
+      url: "/",
+      icon: Home,
       isActive: true,
     },
     {
-      title: "Drafts",
-      url: "#",
-      icon: File,
+      title: "Додати кліп",
+      url: "/campaign/create",
+      icon: PlusCircle,
       isActive: false,
     },
     {
-      title: "Sent",
-      url: "#",
-      icon: Send,
-      isActive: false,
-    },
-    {
-      title: "Junk",
-      url: "#",
-      icon: ArchiveX,
-      isActive: false,
-    },
-    {
-      title: "Trash",
-      url: "#",
-      icon: Trash2,
+      title: "Заробіток",
+      url: "/earn",
+      icon: Wallet,
       isActive: false,
     },
   ],
@@ -68,15 +58,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
-              <a href="#">
-                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-                  <Command className="size-4" />
+              <Link href="/">
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Logo className="size-5" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Acme Inc</span>
+                  <span className="truncate font-medium">Creotik</span>
                   <span className="truncate text-xs">Enterprise</span>
                 </div>
-              </a>
+              </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -92,10 +82,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       children: item.title,
                       hidden: false,
                     }}
+                    asChild
                     className="px-2.5 md:px-2"
                   >
-                    <item.icon />
-                    <span>{item.title}</span>
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
