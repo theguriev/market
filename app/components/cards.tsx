@@ -1,5 +1,11 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  IconBrandInstagram,
+  IconBrandTiktok,
+  IconBrandX,
+  IconBrandYoutube,
+} from "@tabler/icons-react";
+import {
   Card,
   CardDescription,
   CardFooter,
@@ -41,6 +47,14 @@ export function CampaignCards({
                 <div className="text-xs text-muted-foreground">
                   17 годин тому
                 </div>
+                <div className="mt-1 flex items-center gap-2 text-muted-foreground">
+                  <IconBrandYoutube className="size-4" aria-label="YouTube" />
+                  <IconBrandInstagram
+                    className="size-4"
+                    aria-label="Instagram"
+                  />
+                  <IconBrandX className="size-4" aria-label="X" />
+                </div>
               </div>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 $1000.00
@@ -72,6 +86,13 @@ export function CampaignCards({
                 <div className="text-xs text-muted-foreground">
                   17 годин тому
                 </div>
+                <div className="mt-1 flex items-center gap-2 text-muted-foreground">
+                  <IconBrandInstagram
+                    className="size-4"
+                    aria-label="Instagram"
+                  />
+                  <IconBrandX className="size-4" aria-label="X" />
+                </div>
               </div>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                 $1000.00
@@ -102,6 +123,10 @@ export function CampaignCards({
                 </div>
                 <div className="text-xs text-muted-foreground">
                   17 годин тому
+                </div>
+                <div className="mt-1 flex items-center gap-2 text-muted-foreground">
+                  <IconBrandYoutube className="size-4" aria-label="YouTube" />
+                  <IconBrandTiktok className="size-4" aria-label="TikTok" />
                 </div>
               </div>
               <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
