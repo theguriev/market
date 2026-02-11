@@ -1,11 +1,10 @@
 "use client";
 
 import { Home, PlusCircle, Wallet } from "lucide-react";
-import * as React from "react";
-import { Logo } from "./ui/logo";
 import Link from "next/link";
+import { ComponentProps, Suspense } from "react";
+import { Logo } from "./ui/logo";
 
-import { NavUser } from "@/components/nav-user";
 import {
   Sidebar,
   SidebarContent,
@@ -17,6 +16,8 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { SidebarUserPanel } from "./sidebar/user-panel";
+import { Skeleton } from "./ui/skeleton";
 
 // This is sample data
 const data = {
@@ -47,7 +48,7 @@ const data = {
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="none"
@@ -97,7 +98,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <Suspense fallback={<Skeleton className="h-10 rounded-lg" />}>
+          <SidebarUserPanel />
+        </Suspense>
       </SidebarFooter>
     </Sidebar>
   );
