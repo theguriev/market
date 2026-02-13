@@ -53,9 +53,7 @@ export function CampaignCards({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-muted-foreground">
-            Big Game Commercial: Salesforce
-          </div>
+          <span>Big Game Commercial: Salesforce</span>
         </CardContent>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="flex justify-between w-full items-end">
