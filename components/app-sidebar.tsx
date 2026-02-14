@@ -1,6 +1,10 @@
 "use client";
 
-import { SidebarUserPanel } from "@/components/sidebar/user-panel";
+import { Home, PlusCircle, Wallet } from "lucide-react";
+import Link from "next/link";
+import { ComponentProps, Suspense } from "react";
+import { Logo } from "./ui/logo";
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,59 +15,79 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Home, PlusCircle, Wallet } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type ComponentProps, Suspense } from "react";
-import { Logo } from "./ui/logo";
+import { SidebarUserPanel } from "./sidebar/user-panel";
+import { Skeleton } from "./ui/skeleton";
+
+// This is sample data
+const data = {
+  navMain: [
+    {
+      title: "Головна",
+      url: "/",
+      icon: Home,
+      isActive: true,
+    },
+    {
+      title: "Додати кліп",
+      url: "/campaign/create",
+      icon: PlusCircle,
+      isActive: false,
+    },
+    {
+      title: "Заробіток",
+      url: "/earn",
+      icon: Wallet,
+      isActive: false,
+    },
+  ],
+};
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
-          <Link href="/">
-            <Logo className="size-5" />
-            <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
-          </Link>
-        </SidebarMenuButton>
+    <Sidebar
+      collapsible="none"
+      className="h-full min-h-svh w-[calc(var(--sidebar-width-icon)+1px)]! border-r overflow-hidden"
+      {...props}
+    >
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+              <Link href="/">
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Logo className="size-5" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Creotik</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="px-1.5 md:px-0">
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
-                  <Link href="/">
-                    <Home className="size-4 shrink-0" />
-                    <span className="truncate">Головна</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Додати кліп">
-                  <Link href="/campaign/create">
-                    <PlusCircle className="size-4 shrink-0" />
-                    <span className="truncate">Додати кліп</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith("/earn")}
-                  tooltip="Заробіток"
-                >
-                  <Link href="/earn">
-                    <Wallet className="size-4 shrink-0" />
-                    <span className="truncate">Заробіток</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              {data.navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    tooltip={{
+                      children: item.title,
+                      hidden: false,
+                    }}
+                    asChild
+                    className="px-2.5 md:px-2"
+                  >
+                    <Link href={item.url}>
+                      <item.icon />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -73,7 +97,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           <SidebarUserPanel />
         </Suspense>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
   );
 }
