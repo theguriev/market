@@ -118,10 +118,6 @@ export function NavUser({
                 <CreditCard />
                 Оплата
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell />
-                Сповіщення
-              </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem>
