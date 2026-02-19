@@ -1,17 +1,15 @@
 "use client";
 
+import { api } from "@/lib/openapi/api-client";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   BadgeCheck,
-  Bell,
   ChevronsUpDown,
   CreditCard,
   LogOut,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { api } from "@/lib/openapi/api-client";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -42,11 +40,9 @@ export function NavUser({
   const { isMobile } = useSidebar();
   const router = useRouter();
   const queryClient = useQueryClient();
-  const [loggingOut, setLoggingOut] = useState(false);
 
   const handleLogout = async () => {
-    if (loggingOut) return;
-    setLoggingOut(true);
+    router.replace("/login");
     try {
       await api.api("/logout", "post", { authorization: true });
     } catch {
@@ -58,8 +54,6 @@ export function NavUser({
       try {
         queryClient.clear();
       } catch {}
-      router.replace("/login");
-      setLoggingOut(false);
     }
   };
 
@@ -122,13 +116,8 @@ export function NavUser({
             <DropdownMenuSeparator />
             <DropdownMenuItem>
               <LogOut />
-              <button
-                type="button"
-                onClick={handleLogout}
-                disabled={loggingOut}
-                className="contents"
-              >
-                {loggingOut ? "Вихід..." : "Вийти"}
+              <button type="button" onClick={handleLogout} className="contents">
+                Вийти
               </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
