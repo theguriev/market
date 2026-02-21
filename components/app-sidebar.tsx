@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@/hooks/use-user";
 import { Home, PlusCircle, Wallet } from "lucide-react";
 import Link from "next/link";
 import { ComponentProps, Suspense } from "react";
@@ -18,30 +19,6 @@ import {
 } from "@/components/ui/sidebar";
 import { SidebarUserPanel } from "./sidebar/user-panel";
 import { Skeleton } from "./ui/skeleton";
-
-// This is sample data
-const data = {
-  navMain: [
-    {
-      title: "Головна",
-      url: "/",
-      icon: Home,
-      isActive: true,
-    },
-    {
-      title: "Додати кліп",
-      url: "/campaign/create",
-      icon: PlusCircle,
-      isActive: false,
-    },
-    {
-      title: "Заробіток",
-      url: "/earn",
-      icon: Wallet,
-      isActive: false,
-    },
-  ],
-};
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
@@ -71,23 +48,9 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <SidebarGroup>
           <SidebarGroupContent className="px-1.5 md:px-0">
             <SidebarMenu>
-              {data.navMain.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    tooltip={{
-                      children: item.title,
-                      hidden: false,
-                    }}
-                    asChild
-                    className="px-2.5 md:px-2"
-                  >
-                    <Link href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              <Suspense fallback={<NavigationSkeleton />}>
+                <NavigationItems />
+              </Suspense>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -98,5 +61,79 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         </Suspense>
       </SidebarFooter>
     </Sidebar>
+  );
+}
+
+function NavigationItems() {
+  const user = useUser();
+
+  // Base navigation items that all users can see
+  const baseNavItems = [
+    {
+      title: "Головна",
+      url: "/",
+      icon: Home,
+      isActive: true,
+    },
+    {
+      title: "Заробіток",
+      url: "/earn",
+      icon: Wallet,
+      isActive: false,
+    },
+  ];
+
+  // Items only for companies (advertisers)
+  const companyOnlyItems = [
+    {
+      title: "Створити кампанію",
+      url: "/campaign/create",
+      icon: PlusCircle,
+      isActive: false,
+    },
+  ];
+
+  // Combine navigation based on user role
+  const navItems =
+    user.role === "company"
+      ? [
+          ...baseNavItems.slice(0, 1),
+          ...companyOnlyItems,
+          ...baseNavItems.slice(1),
+        ]
+      : baseNavItems;
+
+  return (
+    <>
+      {navItems.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            tooltip={{
+              children: item.title,
+              hidden: false,
+            }}
+            asChild
+            className="px-2.5 md:px-2"
+          >
+            <Link href={item.url}>
+              <item.icon />
+              <span>{item.title}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </>
+  );
+}
+
+function NavigationSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <SidebarMenuItem key={i}>
+          <Skeleton className="h-8 rounded-md" />
+        </SidebarMenuItem>
+      ))}
+    </>
   );
 }
