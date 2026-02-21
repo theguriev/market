@@ -35,14 +35,20 @@ const signupSchema = z
 
 type SignupValues = z.infer<typeof signupSchema>;
 
-export function SignupForm({ className, ...props }: React.ComponentProps<"div">) {
+export function SignupForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const [submitting, setSubmitting] = useState(false);
   const {
     register,
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<SignupValues>({ resolver: zodResolver(signupSchema), mode: "onSubmit" });
+  } = useForm<SignupValues>({
+    resolver: zodResolver(signupSchema),
+    mode: "onSubmit",
+  });
 
   const onSubmit = async (values: SignupValues) => {
     try {
@@ -58,9 +64,11 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
       // Optionally redirect to login or dashboard
     } catch (err) {
       const message =
-        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+        err &&
+        typeof err === "object" &&
+        "humanReadableJSONMessage" in (err as any)
           ? await (err as any).humanReadableJSONMessage()
-          : "Sign up failed";
+          : "Помилка реєстрації";
       setError("root", { message });
     } finally {
       setSubmitting(false);
@@ -72,7 +80,10 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
-            <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
+            <a
+              href="#logo"
+              className="flex flex-col items-center gap-2 font-medium"
+            >
               <div className="flex size-12 items-center justify-center rounded-md">
                 <img src="/logo.svg" alt="логотип" className="size-10" />
               </div>
@@ -140,7 +151,9 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
             <FieldError errors={[errors.password]} />
           </Field>
           <Field data-invalid={!!errors.confirmPassword}>
-            <FieldLabel htmlFor="confirmPassword">Підтвердіть пароль</FieldLabel>
+            <FieldLabel htmlFor="confirmPassword">
+              Підтвердіть пароль
+            </FieldLabel>
             <Input
               id="confirmPassword"
               type="password"
@@ -181,7 +194,8 @@ export function SignupForm({ className, ...props }: React.ComponentProps<"div">)
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        Натискаючи «Продовжити», ви погоджуєтесь з нашими <a href="#terms">Умовами надання послуг</a> та{" "}
+        Натискаючи «Продовжити», ви погоджуєтесь з нашими{" "}
+        <a href="#terms">Умовами надання послуг</a> та{" "}
         <a href="#privacy">Політикою конфіденційності</a>.
       </FieldDescription>
     </div>

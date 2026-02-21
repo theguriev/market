@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/openapi/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Field,
   FieldContent,
@@ -65,17 +66,21 @@ export function CampaignCreateForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const handleChange = (name: keyof CampaignFormState) => (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [name]: event.target.value }));
-  };
+  const handleChange =
+    (name: keyof CampaignFormState) =>
+    (
+      event: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
+      setForm((prev) => ({ ...prev, [name]: event.target.value }));
+    };
 
-  const handleCheckbox = (name: keyof CampaignFormState) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [name]: event.target.checked }));
-  };
+  const handleCheckbox =
+    (name: keyof CampaignFormState) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [name]: event.target.checked }));
+    };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -135,14 +140,16 @@ export function CampaignCreateForm() {
       }));
       await queryClient.invalidateQueries({ queryKey: ["campaigns", "mine"] });
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Не вдалося створити кампанію");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Не вдалося створити кампанію",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl">
       <FieldSet>
         <FieldGroup>
           <Field>
@@ -166,7 +173,7 @@ export function CampaignCreateForm() {
               <FieldTitle>Опис</FieldTitle>
             </FieldLabel>
             <FieldContent>
-              <Input
+              <Textarea
                 id="campaign-description"
                 name="description"
                 value={form.description}
@@ -182,7 +189,7 @@ export function CampaignCreateForm() {
               <FieldTitle>Додаткова інформація</FieldTitle>
             </FieldLabel>
             <FieldContent>
-              <Input
+              <Textarea
                 id="campaign-additional"
                 name="additional"
                 value={form.additional}
@@ -324,7 +331,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("contentStylesCsv")}
                   placeholder="наприклад: tutorial, review"
                 />
-                <FieldDescription>Необов’язково: коди стилів через кому</FieldDescription>
+                <FieldDescription>
+                  Необов’язково: коди стилів через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -340,7 +349,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("videoFormatsCsv")}
                   placeholder="наприклад: mp4, mov"
                 />
-                <FieldDescription>Необов’язково: коди форматів через кому</FieldDescription>
+                <FieldDescription>
+                  Необов’язково: коди форматів через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -378,7 +389,9 @@ export function CampaignCreateForm() {
                   <option value="male">Чоловіки</option>
                   <option value="female">Жінки</option>
                 </select>
-                <FieldDescription>Бажана стать цільової аудиторії</FieldDescription>
+                <FieldDescription>
+                  Бажана стать цільової аудиторії
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -394,7 +407,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("platformsCsv")}
                   placeholder="наприклад: tiktok, instagram"
                 />
-                <FieldDescription>Список кодів платформ через кому</FieldDescription>
+                <FieldDescription>
+                  Список кодів платформ через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
           </div>

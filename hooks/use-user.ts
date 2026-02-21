@@ -14,8 +14,14 @@ export function useUser() {
 
   const userData = response.data;
   return {
+    id: userData.id,
     name: userData.name,
     email: userData.email,
+    role: userData.role,
     avatar: userData.avatar ?? "/avatars/shadcn.jpg",
+    hasPassword: userData.has_password,
+    emailVerifiedAt: userData.email_verified_at,
+    createdAt: userData.created_at,
+    providers: userData.providers,
   };
 }
