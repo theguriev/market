@@ -115,13 +115,9 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem asChild>
                 <Link href="/profile">
-                  <User />
-                  Профіль
+                  <BadgeCheck />
+                  Обліковий запис
                 </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <BadgeCheck />
-                Обліковий запис
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <CreditCard />
