@@ -13,11 +13,13 @@ export default async function Home() {
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <CampaignCards />
+      <SidebarInset className="ml-[calc(var(--sidebar-width-icon)+1px)] min-h-screen">
+        <div className="h-screen overflow-y-auto">
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <CampaignCards />
+              </div>
             </div>
           </div>
         </div>

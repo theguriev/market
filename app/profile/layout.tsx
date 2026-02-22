@@ -19,21 +19,24 @@ export default async function ProfileLayout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4">
-              <div className="container max-w-6xl">
-                <div className="mb-8">
-                  <h1 className="text-3xl font-bold">Профіль</h1>
-                  <p className="text-muted-foreground">
-                    Керуйте налаштуваннями вашого облікового запису та паролем.
-                  </p>
-                </div>
+      <SidebarInset className="ml-[calc(var(--sidebar-width-icon)+1px)] min-h-screen">
+        <div className="h-screen overflow-y-auto">
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6 px-4">
+                <div className="container max-w-6xl">
+                  <div className="mb-8">
+                    <h1 className="text-3xl font-bold">Профіль</h1>
+                    <p className="text-muted-foreground">
+                      Керуйте налаштуваннями вашого облікового запису та
+                      паролем.
+                    </p>
+                  </div>
 
-                <div className="flex gap-6">
-                  <ProfileSidebar />
-                  <div className="flex-1">{children}</div>
+                  <div className="flex gap-6">
+                    <ProfileSidebar />
+                    <div className="flex-1">{children}</div>
+                  </div>
                 </div>
               </div>
             </div>

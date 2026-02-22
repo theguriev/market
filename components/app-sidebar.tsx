@@ -24,7 +24,7 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar
       collapsible="none"
-      className="h-full min-h-svh w-[calc(var(--sidebar-width-icon)+1px)]! border-r overflow-hidden"
+      className="fixed left-0 top-0 h-screen w-[calc(var(--sidebar-width-icon)+1px)]! border-r overflow-hidden z-40"
       {...props}
     >
       <SidebarHeader>
