@@ -67,7 +67,6 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
 function NavigationItems() {
   const user = useUser();
 
-  // Base navigation items that all users can see
   const baseNavItems = [
     {
       title: "Головна",
@@ -83,7 +82,6 @@ function NavigationItems() {
     },
   ];
 
-  // Items only for companies (advertisers)
   const companyOnlyItems = [
     {
       title: "Створити кампанію",
@@ -93,7 +91,6 @@ function NavigationItems() {
     },
   ];
 
-  // Combine navigation based on user role
   const navItems =
     user.role === "company"
       ? [
