@@ -24,8 +24,8 @@ interface CampaignCardProps {
   title: string;
   platforms: Platform[];
   price: number;
-  currency?: string; // default: USD
-  unitLabel?: string; // default: "за 1М переглядів"
+  currency?: string;
+  unitLabel?: string;
 }
 
 const platformIconMap: Record<
