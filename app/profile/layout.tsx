@@ -9,7 +9,6 @@ export default async function ProfileLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Server-side auth check
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
   if (!token) {
