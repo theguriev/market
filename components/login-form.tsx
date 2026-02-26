@@ -52,21 +52,20 @@ export function LoginForm({
     try {
       setSubmitting(true);
       const res = await api.api("/login", "post", { body: values });
-      // Persist token for authenticated requests
+
       try {
         const token = (res as any)?.data?.token;
         if (token) {
-          // Persist in cookie so SSR can access via cookies()
           const secureAttr =
             typeof window !== "undefined" &&
             window.location.protocol === "https:"
               ? "; Secure"
               : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
-      // Redirect to home
+
       router.replace("/");
     } catch (err) {
       const message =
@@ -96,7 +95,7 @@ export function LoginForm({
             window.location.protocol === "https:"
               ? "; Secure"
               : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
@@ -108,8 +107,7 @@ export function LoginForm({
         "humanReadableJSONMessage" in (err as any)
           ? await (err as any).humanReadableJSONMessage()
           : (err as Error)?.message || "Помилка входу через Google";
-      // Surface error via root form error slot
-      // Note: reusing setError from react-hook-form for consistency
+
       (setError as any)("root", { message });
     } finally {
       setGoogleSubmitting(false);
@@ -131,7 +129,7 @@ export function LoginForm({
             window.location.protocol === "https:"
               ? "; Secure"
               : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
