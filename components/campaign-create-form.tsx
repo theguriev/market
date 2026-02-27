@@ -22,14 +22,14 @@ type CampaignFormState = {
   description: string;
   minDuration: string;
   maxDuration: string;
-  deadline: string; // ISO date string (YYYY-MM-DD)
+  deadline: string;
   numberOfCreators: string;
   ageMin: string;
   ageMax: string;
   gender: "all" | "male" | "female";
   cpmRate: string;
   totalBudget: string;
-  platformsCsv: string; // comma-separated list
+  platformsCsv: string;
   additional?: string;
   verifiedCreatorOnly: boolean;
   requirePortfolioReview: boolean;
