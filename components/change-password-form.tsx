@@ -51,7 +51,6 @@ export function ChangePasswordForm() {
     resolver: zodResolver(changePasswordSchema),
   });
 
-  // If user doesn't have a password (OAuth login), show info message
   if (!user.hasPassword) {
     return (
       <div className="flex items-start space-x-2 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-900 dark:bg-blue-950">
