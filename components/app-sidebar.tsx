@@ -1,6 +1,11 @@
 "use client";
 
-import { SidebarUserPanel } from "@/components/sidebar/user-panel";
+import { useUser } from "@/hooks/use-user";
+import { Home, PlusCircle, Wallet } from "lucide-react";
+import Link from "next/link";
+import { ComponentProps, Suspense } from "react";
+import { Logo } from "./ui/logo";
+
 import {
   Sidebar,
   SidebarContent,
@@ -11,59 +16,41 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Home, PlusCircle, Wallet } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { type ComponentProps, Suspense } from "react";
-import { Logo } from "./ui/logo";
+import { SidebarUserPanel } from "./sidebar/user-panel";
+import { Skeleton } from "./ui/skeleton";
 
 export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
-  const pathname = usePathname();
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader className="flex flex-row">
-        <SidebarMenuButton asChild className="hover:bg-transparent hover:text-current">
-          <Link href="/">
-            <Logo className="size-5" />
-            <span className="group-data-[collapsible=icon]:hidden">Creotik</span>
-          </Link>
-        </SidebarMenuButton>
+    <Sidebar
+      collapsible="none"
+      className="fixed left-0 top-0 h-screen w-[calc(var(--sidebar-width-icon)+1px)]! border-r overflow-hidden z-40"
+      {...props}
+    >
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton size="lg" asChild className="md:h-8 md:p-0">
+              <Link href="/">
+                <div className="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Logo className="size-5" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Creotik</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupContent>
+          <SidebarGroupContent className="px-1.5 md:px-0">
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/"} tooltip="Головна">
-                  <Link href="/">
-                    <Home className="size-4 shrink-0" />
-                    <span className="truncate">Головна</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild tooltip="Додати кліп">
-                  <Link href="/campaign/create">
-                    <PlusCircle className="size-4 shrink-0" />
-                    <span className="truncate">Додати кліп</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith("/earn")}
-                  tooltip="Заробіток"
-                >
-                  <Link href="/earn">
-                    <Wallet className="size-4 shrink-0" />
-                    <span className="truncate">Заробіток</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+              <Suspense fallback={<NavigationSkeleton />}>
+                <NavigationItems />
+              </Suspense>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -73,7 +60,77 @@ export function AppSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           <SidebarUserPanel />
         </Suspense>
       </SidebarFooter>
-      <SidebarRail />
     </Sidebar>
+  );
+}
+
+function NavigationItems() {
+  const user = useUser();
+
+  const baseNavItems = [
+    {
+      title: "Головна",
+      url: "/",
+      icon: Home,
+      isActive: true,
+    },
+    {
+      title: "Заробіток",
+      url: "/earn",
+      icon: Wallet,
+      isActive: false,
+    },
+  ];
+
+  const companyOnlyItems = [
+    {
+      title: "Створити кампанію",
+      url: "/campaign/create",
+      icon: PlusCircle,
+      isActive: false,
+    },
+  ];
+
+  const navItems =
+    user.role === "company"
+      ? [
+          ...baseNavItems.slice(0, 1),
+          ...companyOnlyItems,
+          ...baseNavItems.slice(1),
+        ]
+      : baseNavItems;
+
+  return (
+    <>
+      {navItems.map((item) => (
+        <SidebarMenuItem key={item.title}>
+          <SidebarMenuButton
+            tooltip={{
+              children: item.title,
+              hidden: false,
+            }}
+            asChild
+            className="px-2.5 md:px-2"
+          >
+            <Link href={item.url}>
+              <item.icon />
+              <span>{item.title}</span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      ))}
+    </>
+  );
+}
+
+function NavigationSkeleton() {
+  return (
+    <>
+      {Array.from({ length: 3 }).map((_, i) => (
+        <SidebarMenuItem key={i}>
+          <Skeleton className="h-8 rounded-md" />
+        </SidebarMenuItem>
+      ))}
+    </>
   );
 }

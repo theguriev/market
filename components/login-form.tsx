@@ -30,7 +30,10 @@ const loginSchema = z.object({
 
 type LoginValues = z.infer<typeof loginSchema>;
 
-export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
+export function LoginForm({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const [submitting, setSubmitting] = useState(false);
   const [googleSubmitting, setGoogleSubmitting] = useState(false);
   const [appleSubmitting, setAppleSubmitting] = useState(false);
@@ -40,31 +43,37 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<LoginValues>({ resolver: zodResolver(loginSchema), mode: "onSubmit" });
+  } = useForm<LoginValues>({
+    resolver: zodResolver(loginSchema),
+    mode: "onSubmit",
+  });
 
   const onSubmit = async (values: LoginValues) => {
     try {
       setSubmitting(true);
       const res = await api.api("/login", "post", { body: values });
-      // Persist token for authenticated requests
+
       try {
         const token = (res as any)?.data?.token;
         if (token) {
-          // Persist in cookie so SSR can access via cookies()
-          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:"
-            ? "; Secure"
-            : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const secureAttr =
+            typeof window !== "undefined" &&
+            window.location.protocol === "https:"
+              ? "; Secure"
+              : "";
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
-      // Redirect to home
+
       router.replace("/");
     } catch (err) {
       const message =
-        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+        err &&
+        typeof err === "object" &&
+        "humanReadableJSONMessage" in (err as any)
           ? await (err as any).humanReadableJSONMessage()
-          : "Login failed";
+          : "Помилка входу";
       setError("root", { message });
     } finally {
       setSubmitting(false);
@@ -75,23 +84,30 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     try {
       setGoogleSubmitting(true);
       const accessToken = await getGoogleAccessToken();
-      const res = await api.api("/login/google", "post", { body: { access_token: accessToken } });
+      const res = await api.api("/login/google", "post", {
+        body: { access_token: accessToken },
+      });
       try {
         const token = (res as any)?.data?.token;
         if (token) {
-          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const secureAttr =
+            typeof window !== "undefined" &&
+            window.location.protocol === "https:"
+              ? "; Secure"
+              : "";
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
       router.replace("/");
     } catch (err) {
       const message =
-        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+        err &&
+        typeof err === "object" &&
+        "humanReadableJSONMessage" in (err as any)
           ? await (err as any).humanReadableJSONMessage()
-          : (err as Error)?.message || "Google login failed";
-      // Surface error via root form error slot
-      // Note: reusing setError from react-hook-form for consistency
+          : (err as Error)?.message || "Помилка входу через Google";
+
       (setError as any)("root", { message });
     } finally {
       setGoogleSubmitting(false);
@@ -102,21 +118,29 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
     try {
       setAppleSubmitting(true);
       const tokenOrCode = await getAppleIdToken();
-      const res = await api.api("/login/apple", "post", { body: { access_token: tokenOrCode } });
+      const res = await api.api("/login/apple", "post", {
+        body: { access_token: tokenOrCode },
+      });
       try {
         const token = (res as any)?.data?.token;
         if (token) {
-          const secureAttr = typeof window !== "undefined" && window.location.protocol === "https:" ? "; Secure" : "";
-          const maxAge = 60 * 60 * 24 * 30; // 30 days
+          const secureAttr =
+            typeof window !== "undefined" &&
+            window.location.protocol === "https:"
+              ? "; Secure"
+              : "";
+          const maxAge = 60 * 60 * 24 * 30;
           document.cookie = `accessToken=${token}; Path=/; Max-Age=${maxAge}; SameSite=Lax${secureAttr}`;
         }
       } catch {}
       router.replace("/");
     } catch (err) {
       const message =
-        err && typeof err === "object" && "humanReadableJSONMessage" in (err as any)
+        err &&
+        typeof err === "object" &&
+        "humanReadableJSONMessage" in (err as any)
           ? await (err as any).humanReadableJSONMessage()
-          : (err as Error)?.message || "Apple login failed";
+          : (err as Error)?.message || "Помилка входу через Apple";
       (setError as any)("root", { message });
     } finally {
       setAppleSubmitting(false);
@@ -128,7 +152,10 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
       <form onSubmit={handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
-            <a href="#logo" className="flex flex-col items-center gap-2 font-medium">
+            <a
+              href="#logo"
+              className="flex flex-col items-center gap-2 font-medium"
+            >
               <div className="flex size-12 items-center justify-center rounded-md">
                 <Logo className="size-10" />
               </div>
@@ -168,7 +195,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
           </Field>
           <FieldSeparator>Або</FieldSeparator>
           <Field className="grid gap-4 sm:grid-cols-2">
-            <Button variant="outline" type="button" onClick={onAppleLogin} disabled={appleSubmitting}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onAppleLogin}
+              disabled={appleSubmitting}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>Apple logo</title>
                 <path
@@ -178,7 +210,12 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
               </svg>
               {appleSubmitting ? "Підключення Apple..." : "Увійти через Apple"}
             </Button>
-            <Button variant="outline" type="button" onClick={onGoogleLogin} disabled={googleSubmitting}>
+            <Button
+              variant="outline"
+              type="button"
+              onClick={onGoogleLogin}
+              disabled={googleSubmitting}
+            >
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                 <title>Google logo</title>
                 <path
@@ -186,13 +223,16 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
                   fill="currentColor"
                 />
               </svg>
-              {googleSubmitting ? "Підключення Google..." : "Увійти через Google"}
+              {googleSubmitting
+                ? "Підключення Google..."
+                : "Увійти через Google"}
             </Button>
           </Field>
         </FieldGroup>
       </form>
       <FieldDescription className="px-6 text-center">
-        Натискаючи «Продовжити», ви погоджуєтесь з нашими <a href="#terms">Умовами надання послуг</a> та{" "}
+        Натискаючи «Продовжити», ви погоджуєтесь з нашими{" "}
+        <a href="#terms">Умовами надання послуг</a> та{" "}
         <a href="#privacy">Політикою конфіденційності</a>.
       </FieldDescription>
     </div>

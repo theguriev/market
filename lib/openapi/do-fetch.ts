@@ -61,8 +61,8 @@ const doFetch = async ({
     }
     // Handle network errors, timeouts, etc.
     throw new Error(
-      `Network error: ${
-        error instanceof Error ? error.message : "Unknown error"
+      `Мережева помилка: ${
+        error instanceof Error ? error.message : "Невідома помилка"
       }`
     );
   }

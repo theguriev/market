@@ -15,7 +15,7 @@
 
 ## Architecture & Data Flow
 - Routing:
-  - `app/page.tsx`: Home dashboard. Server-side guard reads `accessToken` via `cookies()` and `redirect("/login")` if absent.
+  - `app/page.tsx`: Home dashboard. Server-side guard reads `accessToken` via `await cookies()` and `redirect("/login")` if absent.
   - `app/layout.tsx`: Wraps children with `QueryProvider` so TanStack Query is available.
   - `app/login` and `app/signup`: Client forms posting via `api.api()`.
 - Auth lifecycle:
@@ -43,7 +43,8 @@ await api.api("/user", "get", { authorization: true });
 - Authenticated GET user (server):
 ```ts
 import { cookies } from "next/headers";
-const token = cookies().get("accessToken")?.value || "";
+const cookieStore = await cookies();
+const token = cookieStore.get("accessToken")?.value || "";
 await api.api("/user", "get", { authorization: true, cookie: { accessToken: token } });
 ```
 - Login:
@@ -56,7 +57,7 @@ const token = res.data.token; // store in cookie, then router.replace("/")
 - No `any` and no single-letter variables; infer types with `Awaited<ReturnType<...>>` from OpenAPI calls.
 - Use named `Suspense` import, not `React.Suspense`.
 - For data fetching in client components, prefer TanStack Query v5 `useSuspenseQuery` with a `Skeleton` fallback.
-- To guard pages, use server-only `cookies()` + `redirect()` in page components.
+- To guard pages, use server-only `await cookies()` + `redirect()` in page components.
 - When calling authenticated endpoints, always include `{ authorization: true }`.
 
 ## Integration Notes
