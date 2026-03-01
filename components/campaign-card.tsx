@@ -13,11 +13,13 @@ import {
   IconBrandX,
   IconBrandYoutube,
 } from "@tabler/icons-react";
+import Link from "next/link";
 import type { ComponentType } from "react";
 
 type Platform = "youtube" | "instagram" | "x" | "tiktok";
 
 interface CampaignCardProps {
+  id: string;
   avatar: { src: string; alt: string; fallback: string };
   name: string;
   timeText: string;
@@ -39,6 +41,7 @@ const platformIconMap: Record<
 };
 
 export function CampaignCard({
+  id,
   avatar,
   name,
   timeText,
@@ -55,54 +58,56 @@ export function CampaignCard({
   }).format(price);
 
   return (
-    <Card className="@container/card">
-      <CardHeader>
-        <div className="flex items-start gap-3">
-          <Avatar className="size-10 rounded-md">
-            <AvatarImage src={avatar.src} alt={avatar.alt} />
-            <AvatarFallback>{avatar.fallback}</AvatarFallback>
-          </Avatar>
-          <div>
+    <Link href={`/campaign/${id}`} className="block">
+      <Card className="@container/card cursor-pointer">
+        <CardHeader>
+          <div className="flex items-start gap-3">
+            <Avatar className="size-10 rounded-md">
+              <AvatarImage src={avatar.src} alt={avatar.alt} />
+              <AvatarFallback>{avatar.fallback}</AvatarFallback>
+            </Avatar>
             <div>
-              <div className="flex items-center gap-2">
-                <CardDescription>{name}</CardDescription>
+              <div>
+                <div className="flex items-center gap-2">
+                  <CardDescription>{name}</CardDescription>
+                </div>
+                <div className="text-xs text-muted-foreground">{timeText}</div>
               </div>
-              <div className="text-xs text-muted-foreground">{timeText}</div>
             </div>
           </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <span>{title}</span>
-      </CardContent>
-      <CardFooter className="flex-col items-start gap-1.5 text-sm">
-        <div className="flex justify-between w-full items-end">
-          <div className="mt-1 flex items-center gap-2 text-muted-foreground">
-            {platforms.map((platformId) => {
-              const Icon = platformIconMap[platformId];
-              const ariaLabel =
-                platformId === "x"
-                  ? "X"
-                  : platformId.charAt(0).toUpperCase() + platformId.slice(1);
-              return (
-                <Icon
-                  key={platformId}
-                  className="size-4"
-                  aria-label={ariaLabel}
-                />
-              );
-            })}
+        </CardHeader>
+        <CardContent>
+          <span>{title}</span>
+        </CardContent>
+        <CardFooter className="flex-col items-start gap-1.5 text-sm">
+          <div className="flex justify-between w-full items-end">
+            <div className="mt-1 flex items-center gap-2 text-muted-foreground">
+              {platforms.map((platformId) => {
+                const Icon = platformIconMap[platformId];
+                const ariaLabel =
+                  platformId === "x"
+                    ? "X"
+                    : platformId.charAt(0).toUpperCase() + platformId.slice(1);
+                return (
+                  <Icon
+                    key={platformId}
+                    className="size-4"
+                    aria-label={ariaLabel}
+                  />
+                );
+              })}
+            </div>
+            <div className="flex flex-col items-end">
+              <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
+                {formattedPrice}
+              </CardTitle>
+              <span className="text-xs text-muted-foreground leading-none">
+                {unitLabel}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col items-end">
-            <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-              {formattedPrice}
-            </CardTitle>
-            <span className="text-xs text-muted-foreground leading-none">
-              {unitLabel}
-            </span>
-          </div>
-        </div>
-      </CardFooter>
-    </Card>
+        </CardFooter>
+      </Card>
+    </Link>
   );
 }
