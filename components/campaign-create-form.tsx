@@ -24,8 +24,7 @@ type CampaignFormState = {
   durationRange: [number, number];
   deadline: string;
   numberOfCreators: string;
-  ageMin: string;
-  ageMax: string;
+  ageRange: [number, number];
   gender: "all" | "male" | "female";
   cpmRate: string;
   totalBudget: string;
@@ -46,8 +45,7 @@ export function CampaignCreateForm() {
     durationRange: [15, 60],
     deadline: "",
     numberOfCreators: "1",
-    ageMin: "18",
-    ageMax: "99",
+    ageRange: [18, 99],
     gender: "all",
     cpmRate: "0",
     totalBudget: "0",
@@ -85,6 +83,10 @@ export function CampaignCreateForm() {
     setForm((prev) => ({ ...prev, durationRange: [value[0], value[1]] }));
   };
 
+  const handleAgeChange = (value: number[]) => {
+    setForm((prev) => ({ ...prev, ageRange: [value[0], value[1]] }));
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
@@ -115,8 +117,8 @@ export function CampaignCreateForm() {
           max_duration: form.durationRange[1],
           deadline: new Date(form.deadline).toISOString(),
           number_of_creators: Number(form.numberOfCreators),
-          age_min: Number(form.ageMin),
-          age_max: Number(form.ageMax),
+          age_min: form.ageRange[0],
+          age_max: form.ageRange[1],
           gender: form.gender,
           cpm_rate: Number(form.cpmRate),
           total_budget: Number(form.totalBudget),
@@ -229,39 +231,31 @@ export function CampaignCreateForm() {
             </FieldContent>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <FieldLabel htmlFor="campaign-age-min">
-                <FieldTitle>Мін. вік</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-age-min"
-                  inputMode="numeric"
-                  name="ageMin"
-                  value={form.ageMin}
-                  onChange={handleChange("ageMin")}
-                  required
+          <Field>
+            <FieldLabel>
+              <FieldTitle>Вік (роки)</FieldTitle>
+            </FieldLabel>
+            <FieldContent>
+              <div className="px-3">
+                <Slider
+                  min={13}
+                  max={100}
+                  step={1}
+                  value={form.ageRange}
+                  onValueChange={handleAgeChange}
+                  className="mb-2"
                 />
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="campaign-age-max">
-                <FieldTitle>Макс. вік</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-age-max"
-                  inputMode="numeric"
-                  name="ageMax"
-                  value={form.ageMax}
-                  onChange={handleChange("ageMax")}
-                  required
-                />
-              </FieldContent>
-            </Field>
-          </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{form.ageRange[0]} років</span>
+                  <span>{form.ageRange[1]} років</span>
+                </div>
+              </div>
+              <FieldDescription>
+                Виберіть віковий діапазон аудиторії від {form.ageRange[0]} до{" "}
+                {form.ageRange[1]} років
+              </FieldDescription>
+            </FieldContent>
+          </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field>
