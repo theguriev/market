@@ -6,6 +6,7 @@ import { api } from "@/lib/openapi/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
 import {
   Field,
   FieldContent,
@@ -20,8 +21,7 @@ import {
 type CampaignFormState = {
   title: string;
   description: string;
-  minDuration: string;
-  maxDuration: string;
+  durationRange: [number, number];
   deadline: string;
   numberOfCreators: string;
   ageMin: string;
@@ -43,8 +43,7 @@ export function CampaignCreateForm() {
   const [form, setForm] = useState<CampaignFormState>({
     title: "",
     description: "",
-    minDuration: "15",
-    maxDuration: "60",
+    durationRange: [15, 60],
     deadline: "",
     numberOfCreators: "1",
     ageMin: "18",
@@ -82,6 +81,10 @@ export function CampaignCreateForm() {
       setForm((prev) => ({ ...prev, [name]: event.target.checked }));
     };
 
+  const handleDurationChange = (value: number[]) => {
+    setForm((prev) => ({ ...prev, durationRange: [value[0], value[1]] }));
+  };
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitting(true);
@@ -108,8 +111,8 @@ export function CampaignCreateForm() {
         body: {
           title: form.title,
           description: form.description,
-          min_duration: Number(form.minDuration),
-          max_duration: Number(form.maxDuration),
+          min_duration: form.durationRange[0],
+          max_duration: form.durationRange[1],
           deadline: new Date(form.deadline).toISOString(),
           number_of_creators: Number(form.numberOfCreators),
           age_min: Number(form.ageMin),
@@ -200,39 +203,31 @@ export function CampaignCreateForm() {
             </FieldContent>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <FieldLabel htmlFor="campaign-min-duration">
-                <FieldTitle>Мін. тривалість (сек)</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-min-duration"
-                  inputMode="numeric"
-                  name="minDuration"
-                  value={form.minDuration}
-                  onChange={handleChange("minDuration")}
-                  required
+          <Field>
+            <FieldLabel>
+              <FieldTitle>Тривалість (сек)</FieldTitle>
+            </FieldLabel>
+            <FieldContent>
+              <div className="px-3">
+                <Slider
+                  min={5}
+                  max={300}
+                  step={5}
+                  value={form.durationRange}
+                  onValueChange={handleDurationChange}
+                  className="mb-2"
                 />
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="campaign-max-duration">
-                <FieldTitle>Макс. тривалість (сек)</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-max-duration"
-                  inputMode="numeric"
-                  name="maxDuration"
-                  value={form.maxDuration}
-                  onChange={handleChange("maxDuration")}
-                  required
-                />
-              </FieldContent>
-            </Field>
-          </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{form.durationRange[0]} сек</span>
+                  <span>{form.durationRange[1]} сек</span>
+                </div>
+              </div>
+              <FieldDescription>
+                Виберіть діапазон тривалості відео від {form.durationRange[0]}{" "}
+                до {form.durationRange[1]} секунд
+              </FieldDescription>
+            </FieldContent>
+          </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field>
