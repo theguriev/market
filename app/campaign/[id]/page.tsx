@@ -23,7 +23,6 @@ export default async function CampaignPage({ params }: CampaignPageProps) {
     //   cookie: { accessToken: token }
     // });
 
-    // Пока используем заглушку
     const mockCampaign = {
       id: params.id,
       title: "Sample Campaign",
