@@ -70,7 +70,6 @@ export function ProfileForm() {
         role: values.role,
       };
 
-      // Only include avatar if it's provided
       if (values.avatar && values.avatar.trim()) {
         body.avatar = values.avatar;
       } else if (values.avatar === "") {
