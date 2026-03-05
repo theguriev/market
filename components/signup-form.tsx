@@ -61,7 +61,6 @@ export function SignupForm({
         role: values.role,
       };
       await api.api("/register", "post", { body });
-      // Optionally redirect to login or dashboard
     } catch (err) {
       const message =
         err &&
