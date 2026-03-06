@@ -16,7 +16,7 @@ export default class FetchApiError extends Error {
     try {
       this._json = await this.response.json();
     } catch (error) {
-      console.error("Failed to parse JSON from response:", error);
+      console.error("Не вдалося розібрати JSON з відповіді:", error);
       this._json = {};
     }
 
@@ -25,7 +25,7 @@ export default class FetchApiError extends Error {
 
   async humanReadableJSONMessage() {
     const json = await this.json();
-    return (json as { message?: string })?.message || "An error occurred";
+    return (json as { message?: string })?.message || "Виникла помилка";
   }
 
   static async fromResponse(response: Response): Promise<FetchApiError> {
