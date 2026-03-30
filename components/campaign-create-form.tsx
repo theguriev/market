@@ -5,6 +5,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/openapi/api-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Slider } from "@/components/ui/slider";
 import {
   Field,
   FieldContent,
@@ -19,16 +21,14 @@ import {
 type CampaignFormState = {
   title: string;
   description: string;
-  minDuration: string;
-  maxDuration: string;
-  deadline: string; // ISO date string (YYYY-MM-DD)
+  durationRange: [number, number];
+  deadline: string;
   numberOfCreators: string;
-  ageMin: string;
-  ageMax: string;
+  ageRange: [number, number];
   gender: "all" | "male" | "female";
   cpmRate: string;
   totalBudget: string;
-  platformsCsv: string; // comma-separated list
+  platformsCsv: string;
   additional?: string;
   verifiedCreatorOnly: boolean;
   requirePortfolioReview: boolean;
@@ -42,12 +42,10 @@ export function CampaignCreateForm() {
   const [form, setForm] = useState<CampaignFormState>({
     title: "",
     description: "",
-    minDuration: "15",
-    maxDuration: "60",
+    durationRange: [15, 60],
     deadline: "",
     numberOfCreators: "1",
-    ageMin: "18",
-    ageMax: "99",
+    ageRange: [18, 99],
     gender: "all",
     cpmRate: "0",
     totalBudget: "0",
@@ -65,16 +63,28 @@ export function CampaignCreateForm() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const handleChange = (name: keyof CampaignFormState) => (
-    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [name]: event.target.value }));
+  const handleChange =
+    (name: keyof CampaignFormState) =>
+    (
+      event: React.ChangeEvent<
+        HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+      >,
+    ) => {
+      setForm((prev) => ({ ...prev, [name]: event.target.value }));
+    };
+
+  const handleCheckbox =
+    (name: keyof CampaignFormState) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setForm((prev) => ({ ...prev, [name]: event.target.checked }));
+    };
+
+  const handleDurationChange = (value: number[]) => {
+    setForm((prev) => ({ ...prev, durationRange: [value[0], value[1]] }));
   };
 
-  const handleCheckbox = (name: keyof CampaignFormState) => (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setForm((prev) => ({ ...prev, [name]: event.target.checked }));
+  const handleAgeChange = (value: number[]) => {
+    setForm((prev) => ({ ...prev, ageRange: [value[0], value[1]] }));
   };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -103,12 +113,12 @@ export function CampaignCreateForm() {
         body: {
           title: form.title,
           description: form.description,
-          min_duration: Number(form.minDuration),
-          max_duration: Number(form.maxDuration),
+          min_duration: form.durationRange[0],
+          max_duration: form.durationRange[1],
           deadline: new Date(form.deadline).toISOString(),
           number_of_creators: Number(form.numberOfCreators),
-          age_min: Number(form.ageMin),
-          age_max: Number(form.ageMax),
+          age_min: form.ageRange[0],
+          age_max: form.ageRange[1],
           gender: form.gender,
           cpm_rate: Number(form.cpmRate),
           total_budget: Number(form.totalBudget),
@@ -135,14 +145,16 @@ export function CampaignCreateForm() {
       }));
       await queryClient.invalidateQueries({ queryKey: ["campaigns", "mine"] });
     } catch (error) {
-      setErrorMessage(error instanceof Error ? error.message : "Не вдалося створити кампанію");
+      setErrorMessage(
+        error instanceof Error ? error.message : "Не вдалося створити кампанію",
+      );
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 max-w-4xl">
       <FieldSet>
         <FieldGroup>
           <Field>
@@ -166,7 +178,7 @@ export function CampaignCreateForm() {
               <FieldTitle>Опис</FieldTitle>
             </FieldLabel>
             <FieldContent>
-              <Input
+              <Textarea
                 id="campaign-description"
                 name="description"
                 value={form.description}
@@ -182,7 +194,7 @@ export function CampaignCreateForm() {
               <FieldTitle>Додаткова інформація</FieldTitle>
             </FieldLabel>
             <FieldContent>
-              <Input
+              <Textarea
                 id="campaign-additional"
                 name="additional"
                 value={form.additional}
@@ -193,73 +205,57 @@ export function CampaignCreateForm() {
             </FieldContent>
           </Field>
 
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <FieldLabel htmlFor="campaign-min-duration">
-                <FieldTitle>Мін. тривалість (сек)</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-min-duration"
-                  inputMode="numeric"
-                  name="minDuration"
-                  value={form.minDuration}
-                  onChange={handleChange("minDuration")}
-                  required
+          <Field>
+            <FieldLabel>
+              <FieldTitle>Тривалість (сек)</FieldTitle>
+            </FieldLabel>
+            <FieldContent>
+              <div className="px-3">
+                <Slider
+                  min={5}
+                  max={300}
+                  step={5}
+                  value={form.durationRange}
+                  onValueChange={handleDurationChange}
+                  className="mb-2"
                 />
-              </FieldContent>
-            </Field>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{form.durationRange[0]} сек</span>
+                  <span>{form.durationRange[1]} сек</span>
+                </div>
+              </div>
+              <FieldDescription>
+                Виберіть діапазон тривалості відео від {form.durationRange[0]}{" "}
+                до {form.durationRange[1]} секунд
+              </FieldDescription>
+            </FieldContent>
+          </Field>
 
-            <Field>
-              <FieldLabel htmlFor="campaign-max-duration">
-                <FieldTitle>Макс. тривалість (сек)</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-max-duration"
-                  inputMode="numeric"
-                  name="maxDuration"
-                  value={form.maxDuration}
-                  onChange={handleChange("maxDuration")}
-                  required
+          <Field>
+            <FieldLabel>
+              <FieldTitle>Вік (роки)</FieldTitle>
+            </FieldLabel>
+            <FieldContent>
+              <div className="px-3">
+                <Slider
+                  min={13}
+                  max={100}
+                  step={1}
+                  value={form.ageRange}
+                  onValueChange={handleAgeChange}
+                  className="mb-2"
                 />
-              </FieldContent>
-            </Field>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <Field>
-              <FieldLabel htmlFor="campaign-age-min">
-                <FieldTitle>Мін. вік</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-age-min"
-                  inputMode="numeric"
-                  name="ageMin"
-                  value={form.ageMin}
-                  onChange={handleChange("ageMin")}
-                  required
-                />
-              </FieldContent>
-            </Field>
-
-            <Field>
-              <FieldLabel htmlFor="campaign-age-max">
-                <FieldTitle>Макс. вік</FieldTitle>
-              </FieldLabel>
-              <FieldContent>
-                <Input
-                  id="campaign-age-max"
-                  inputMode="numeric"
-                  name="ageMax"
-                  value={form.ageMax}
-                  onChange={handleChange("ageMax")}
-                  required
-                />
-              </FieldContent>
-            </Field>
-          </div>
+                <div className="flex justify-between text-sm text-muted-foreground">
+                  <span>{form.ageRange[0]} років</span>
+                  <span>{form.ageRange[1]} років</span>
+                </div>
+              </div>
+              <FieldDescription>
+                Виберіть віковий діапазон аудиторії від {form.ageRange[0]} до{" "}
+                {form.ageRange[1]} років
+              </FieldDescription>
+            </FieldContent>
+          </Field>
 
           <div className="grid grid-cols-2 gap-3">
             <Field>
@@ -324,7 +320,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("contentStylesCsv")}
                   placeholder="наприклад: tutorial, review"
                 />
-                <FieldDescription>Необов’язково: коди стилів через кому</FieldDescription>
+                <FieldDescription>
+                  Необов’язково: коди стилів через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -340,7 +338,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("videoFormatsCsv")}
                   placeholder="наприклад: mp4, mov"
                 />
-                <FieldDescription>Необов’язково: коди форматів через кому</FieldDescription>
+                <FieldDescription>
+                  Необов’язково: коди форматів через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -378,7 +378,9 @@ export function CampaignCreateForm() {
                   <option value="male">Чоловіки</option>
                   <option value="female">Жінки</option>
                 </select>
-                <FieldDescription>Бажана стать цільової аудиторії</FieldDescription>
+                <FieldDescription>
+                  Бажана стать цільової аудиторії
+                </FieldDescription>
               </FieldContent>
             </Field>
 
@@ -394,7 +396,9 @@ export function CampaignCreateForm() {
                   onChange={handleChange("platformsCsv")}
                   placeholder="наприклад: tiktok, instagram"
                 />
-                <FieldDescription>Список кодів платформ через кому</FieldDescription>
+                <FieldDescription>
+                  Список кодів платформ через кому
+                </FieldDescription>
               </FieldContent>
             </Field>
           </div>
